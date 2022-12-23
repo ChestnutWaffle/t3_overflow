@@ -1,0 +1,41 @@
+"filename", "language", "TypeScript React", "TypeScript", "CSS", "JavaScript", "JSON", "comment", "blank", "total"
+"d:\code\_projects\overflow\qna-forum\src\components\Auth\GoogleSignIn.tsx", "TypeScript React", 21, 0, 0, 0, 0, 0, 4, 25
+"d:\code\_projects\overflow\qna-forum\src\components\Auth\HelperText.tsx", "TypeScript React", 23, 0, 0, 0, 0, 0, 6, 29
+"d:\code\_projects\overflow\qna-forum\src\components\Auth\SignIn.tsx", "TypeScript React", 165, 0, 0, 0, 0, 0, 9, 174
+"d:\code\_projects\overflow\qna-forum\src\components\Auth\SignUp.tsx", "TypeScript React", 263, 0, 0, 0, 0, 0, 11, 274
+"d:\code\_projects\overflow\qna-forum\src\components\PageComponents\Drawer.tsx", "TypeScript React", 34, 0, 0, 0, 0, 0, 4, 38
+"d:\code\_projects\overflow\qna-forum\src\components\PageComponents\LoadingPage.tsx", "TypeScript React", 10, 0, 0, 0, 0, 0, 3, 13
+"d:\code\_projects\overflow\qna-forum\src\components\PageComponents\Sidebar.tsx", "TypeScript React", 17, 0, 0, 0, 0, 1, 5, 23
+"d:\code\_projects\overflow\qna-forum\src\components\Pagination\Pagination.tsx", "TypeScript React", 48, 0, 0, 0, 0, 0, 4, 52
+"d:\code\_projects\overflow\qna-forum\src\components\navbar\Loading.tsx", "TypeScript React", 17, 0, 0, 0, 0, 0, 4, 21
+"d:\code\_projects\overflow\qna-forum\src\components\navbar\SignoutButton.tsx", "TypeScript React", 39, 0, 0, 0, 0, 0, 5, 44
+"d:\code\_projects\overflow\qna-forum\src\components\navbar\index.tsx", "TypeScript React", 98, 0, 0, 0, 0, 0, 7, 105
+"d:\code\_projects\overflow\qna-forum\src\components\sidebar\NavLink.tsx", "TypeScript React", 35, 0, 0, 0, 0, 0, 6, 41
+"d:\code\_projects\overflow\qna-forum\src\components\sidebar\index.tsx", "TypeScript React", 42, 0, 0, 0, 0, 8, 5, 55
+"d:\code\_projects\overflow\qna-forum\src\env\client.mjs", "JavaScript", 0, 0, 0, 27, 0, 2, 7, 36
+"d:\code\_projects\overflow\qna-forum\src\env\schema.mjs", "JavaScript", 0, 0, 0, 8, 0, 18, 4, 30
+"d:\code\_projects\overflow\qna-forum\src\env\server.mjs", "JavaScript", 0, 0, 0, 17, 0, 5, 6, 28
+"d:\code\_projects\overflow\qna-forum\src\pages\404.tsx", "TypeScript React", 25, 0, 0, 0, 0, 0, 4, 29
+"d:\code\_projects\overflow\qna-forum\src\pages\500.tsx", "TypeScript React", 18, 0, 0, 0, 0, 0, 3, 21
+"d:\code\_projects\overflow\qna-forum\src\pages\_app.tsx", "TypeScript React", 33, 0, 0, 0, 0, 1, 5, 39
+"d:\code\_projects\overflow\qna-forum\src\pages\_document.tsx", "TypeScript React", 12, 0, 0, 0, 0, 0, 2, 14
+"d:\code\_projects\overflow\qna-forum\src\pages\api\trpc\[trpc].ts", "TypeScript", 0, 14, 0, 0, 0, 1, 3, 18
+"d:\code\_projects\overflow\qna-forum\src\pages\index.tsx", "TypeScript React", 82, 0, 0, 0, 0, 0, 8, 90
+"d:\code\_projects\overflow\qna-forum\src\pages\questions\[questionId].tsx", "TypeScript React", 162, 0, 0, 0, 0, 0, 12, 174
+"d:\code\_projects\overflow\qna-forum\src\pages\sign-in.tsx", "TypeScript React", 14, 0, 0, 0, 0, 0, 3, 17
+"d:\code\_projects\overflow\qna-forum\src\pages\sign-up.tsx", "TypeScript React", 10, 0, 0, 0, 0, 0, 3, 13
+"d:\code\_projects\overflow\qna-forum\src\pages\users\[uid]\[username].tsx", "TypeScript React", 43, 0, 0, 0, 0, 0, 11, 54
+"d:\code\_projects\overflow\qna-forum\src\pages\users\[uid]\index.tsx", "TypeScript React", 24, 0, 0, 0, 0, 0, 9, 33
+"d:\code\_projects\overflow\qna-forum\src\pages\users\index.tsx", "TypeScript React", 73, 0, 0, 0, 0, 0, 11, 84
+"d:\code\_projects\overflow\qna-forum\src\server\db\mock.json", "JSON", 0, 0, 0, 0, 127754, 0, 1, 127755
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\context.ts", "TypeScript", 0, 10, 0, 0, 0, 12, 5, 27
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\_app.ts", "TypeScript", 0, 8, 0, 0, 0, 1, 3, 12
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\example.ts", "TypeScript", 0, 11, 0, 0, 0, 0, 3, 14
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\mock.ts", "TypeScript", 0, 133, 0, 0, 0, 0, 15, 148
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\trpc.ts", "TypeScript", 0, 11, 0, 0, 0, 0, 5, 16
+"d:\code\_projects\overflow\qna-forum\src\styles\globals.css", "CSS", 0, 0, 103, 0, 0, 3, 14, 120
+"d:\code\_projects\overflow\qna-forum\src\types\defined-types.ts", "TypeScript", 0, 77, 0, 0, 0, 0, 4, 81
+"d:\code\_projects\overflow\qna-forum\src\utils\firebase\index.ts", "TypeScript", 0, 61, 0, 0, 0, 1, 18, 80
+"d:\code\_projects\overflow\qna-forum\src\utils\mockUtils.ts", "TypeScript", 0, 13, 0, 0, 0, 0, 2, 15
+"d:\code\_projects\overflow\qna-forum\src\utils\trpc.ts", "TypeScript", 0, 49, 0, 0, 0, 10, 5, 64
+"Total", "-", 1308, 387, 103, 52, 127754, 63, 239, 129906

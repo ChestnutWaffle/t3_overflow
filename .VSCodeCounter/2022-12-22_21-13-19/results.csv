@@ -1,0 +1,125 @@
+"filename", "language", "TypeScript", "JSON", "CSS", "TypeScript React", "JavaScript", "Less", "comment", "blank", "total"
+"d:\code\_projects\overflow\qna-forum\src\components\Auth\GoogleBtn.tsx", "TypeScript React", 0, 0, 0, 28, 0, 0, 0, 6, 34
+"d:\code\_projects\overflow\qna-forum\src\components\Auth\HelperText.tsx", "TypeScript React", 0, 0, 0, 37, 0, 0, 10, 5, 52
+"d:\code\_projects\overflow\qna-forum\src\components\Auth\SignIn.tsx", "TypeScript React", 0, 0, 0, 234, 0, 0, 0, 16, 250
+"d:\code\_projects\overflow\qna-forum\src\components\Auth\SignUp.tsx", "TypeScript React", 0, 0, 0, 339, 0, 0, 0, 16, 355
+"d:\code\_projects\overflow\qna-forum\src\components\General\TagInput.tsx", "TypeScript React", 0, 0, 0, 81, 0, 0, 1, 12, 94
+"d:\code\_projects\overflow\qna-forum\src\components\HOC\AuthCheck.tsx", "TypeScript React", 0, 0, 0, 10, 0, 0, 0, 4, 14
+"d:\code\_projects\overflow\qna-forum\src\components\HOC\EmailVerifyCheck.tsx", "TypeScript React", 0, 0, 0, 15, 0, 0, 0, 4, 19
+"d:\code\_projects\overflow\qna-forum\src\components\Layout\index.tsx", "TypeScript React", 0, 0, 0, 33, 0, 0, 0, 6, 39
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\Editor.tsx", "TypeScript React", 0, 0, 0, 72, 0, 0, 0, 6, 78
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\Context.tsx", "TypeScript React", 0, 0, 0, 36, 0, 0, 0, 6, 42
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\Editor.tsx", "TypeScript React", 0, 0, 0, 338, 0, 0, 100, 18, 456
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\bold.tsx", "TypeScript React", 0, 0, 0, 33, 0, 0, 3, 2, 38
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\code.tsx", "TypeScript React", 0, 0, 0, 105, 0, 0, 4, 15, 124
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\comment.tsx", "TypeScript React", 0, 0, 0, 45, 0, 0, 3, 2, 50
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\divider.tsx", "TypeScript React", 0, 0, 0, 4, 0, 0, 0, 2, 6
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\fullscreen.tsx", "TypeScript React", 0, 0, 0, 33, 0, 0, 0, 2, 35
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\group.tsx", "TypeScript React", 0, 0, 0, 31, 0, 0, 0, 3, 34
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\hr.tsx", "TypeScript React", 0, 0, 0, 24, 0, 0, 0, 2, 26
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\image.tsx", "TypeScript React", 0, 0, 0, 35, 0, 0, 3, 2, 40
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\index.ts", "TypeScript", 196, 0, 0, 0, 0, 0, 10, 20, 226
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\italic.tsx", "TypeScript React", 0, 0, 0, 39, 0, 0, 3, 2, 44
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\link.tsx", "TypeScript React", 0, 0, 0, 39, 0, 0, 3, 2, 44
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\list.tsx", "TypeScript React", 0, 0, 0, 144, 0, 0, 6, 16, 166
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\preview.tsx", "TypeScript React", 0, 0, 0, 105, 0, 0, 0, 4, 109
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\quote.tsx", "TypeScript React", 0, 0, 0, 50, 0, 0, 2, 6, 58
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\strikeThrough.tsx", "TypeScript React", 0, 0, 0, 39, 0, 0, 3, 2, 44
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\title.tsx", "TypeScript React", 0, 0, 0, 14, 0, 0, 0, 2, 16
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\title1.tsx", "TypeScript React", 0, 0, 0, 21, 0, 0, 0, 2, 23
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\title2.tsx", "TypeScript React", 0, 0, 0, 21, 0, 0, 0, 2, 23
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\title3.tsx", "TypeScript React", 0, 0, 0, 21, 0, 0, 0, 2, 23
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\title4.tsx", "TypeScript React", 0, 0, 0, 21, 0, 0, 0, 2, 23
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\title5.tsx", "TypeScript React", 0, 0, 0, 21, 0, 0, 0, 2, 23
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\commands\title6.tsx", "TypeScript React", 0, 0, 0, 21, 0, 0, 0, 2, 23
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\DragBar\index.less", "Less", 0, 0, 0, 0, 0, 20, 0, 2, 22
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\DragBar\index.tsx", "TypeScript React", 0, 0, 0, 82, 0, 0, 2, 5, 89
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\TextArea\Markdown.tsx", "TypeScript React", 0, 0, 0, 71, 0, 0, 1, 5, 77
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\TextArea\Textarea.tsx", "TypeScript React", 0, 0, 0, 79, 0, 0, 4, 7, 90
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\TextArea\handleKeyDown.tsx", "TypeScript React", 0, 0, 0, 90, 0, 0, 10, 12, 112
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\TextArea\index.less", "Less", 0, 0, 0, 0, 0, 123, 8, 3, 134
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\TextArea\index.tsx", "TypeScript React", 0, 0, 0, 129, 0, 0, 3, 8, 140
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\TextArea\shortcuts.ts", "TypeScript", 68, 0, 0, 0, 0, 0, 0, 5, 73
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\Toolbar\Child.less", "Less", 0, 0, 0, 0, 0, 30, 0, 2, 32
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\Toolbar\Child.tsx", "TypeScript React", 0, 0, 0, 29, 0, 0, 2, 3, 34
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\Toolbar\index.less", "Less", 0, 0, 0, 0, 0, 78, 0, 2, 80
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\components\Toolbar\index.tsx", "TypeScript React", 0, 0, 0, 156, 0, 0, 4, 8, 168
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\index.less", "Less", 0, 0, 0, 0, 0, 83, 2, 2, 87
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\index.tsx", "TypeScript React", 0, 0, 0, 9, 0, 0, 0, 4, 13
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\react-app-env.d.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 1, 1, 2
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\utils\InsertTextAtPosition.ts", "TypeScript", 94, 0, 0, 0, 0, 0, 40, 21, 155
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdEditor\utils\markdownUtils.ts", "TypeScript", 73, 0, 0, 0, 0, 0, 21, 15, 109
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdPreview\index.tsx", "TypeScript React", 0, 0, 0, 140, 0, 0, 1, 7, 148
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdPreview\nodes\copy.ts", "TypeScript", 68, 0, 0, 0, 0, 0, 0, 2, 70
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdPreview\nodes\octiconLink.ts", "TypeScript", 24, 0, 0, 0, 0, 0, 0, 2, 26
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdPreview\plugins\reservedMeta.ts", "TypeScript", 23, 0, 0, 0, 0, 0, 1, 3, 27
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdPreview\plugins\useCopied.tsx", "TypeScript React", 0, 0, 0, 20, 0, 0, 1, 2, 23
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\MdPreview\styles\markdown.less", "Less", 0, 0, 0, 0, 0, 1015, 0, 120, 1135
+"d:\code\_projects\overflow\qna-forum\src\components\Markdown\Preview.tsx", "TypeScript React", 0, 0, 0, 34, 0, 0, 0, 5, 39
+"d:\code\_projects\overflow\qna-forum\src\components\PageComponents\Create.tsx", "TypeScript React", 0, 0, 0, 230, 0, 0, 12, 13, 255
+"d:\code\_projects\overflow\qna-forum\src\components\PageComponents\Drawer.tsx", "TypeScript React", 0, 0, 0, 34, 0, 0, 0, 4, 38
+"d:\code\_projects\overflow\qna-forum\src\components\PageComponents\Post.tsx", "TypeScript React", 0, 0, 0, 69, 0, 0, 0, 4, 73
+"d:\code\_projects\overflow\qna-forum\src\components\PageComponents\Question.tsx", "TypeScript React", 0, 0, 0, 140, 0, 0, 0, 7, 147
+"d:\code\_projects\overflow\qna-forum\src\components\PageComponents\Sidebar.tsx", "TypeScript React", 0, 0, 0, 17, 0, 0, 1, 5, 23
+"d:\code\_projects\overflow\qna-forum\src\components\PageComponents\Tags.tsx", "TypeScript React", 0, 0, 0, 49, 0, 0, 0, 5, 54
+"d:\code\_projects\overflow\qna-forum\src\components\PageComponents\Users.tsx", "TypeScript React", 0, 0, 0, 49, 0, 0, 0, 5, 54
+"d:\code\_projects\overflow\qna-forum\src\components\Pagination\index.tsx", "TypeScript React", 0, 0, 0, 48, 0, 0, 0, 4, 52
+"d:\code\_projects\overflow\qna-forum\src\components\navbar\Loading.tsx", "TypeScript React", 0, 0, 0, 38, 0, 0, 0, 8, 46
+"d:\code\_projects\overflow\qna-forum\src\components\navbar\SignoutButton.tsx", "TypeScript React", 0, 0, 0, 58, 0, 0, 0, 8, 66
+"d:\code\_projects\overflow\qna-forum\src\components\navbar\index.tsx", "TypeScript React", 0, 0, 0, 150, 0, 0, 0, 10, 160
+"d:\code\_projects\overflow\qna-forum\src\components\sidebar\AskLink.tsx", "TypeScript React", 0, 0, 0, 22, 0, 0, 0, 5, 27
+"d:\code\_projects\overflow\qna-forum\src\components\sidebar\EmailVerify.tsx", "TypeScript React", 0, 0, 0, 56, 0, 0, 0, 9, 65
+"d:\code\_projects\overflow\qna-forum\src\components\sidebar\NavLink.tsx", "TypeScript React", 0, 0, 0, 35, 0, 0, 0, 6, 41
+"d:\code\_projects\overflow\qna-forum\src\components\sidebar\index.tsx", "TypeScript React", 0, 0, 0, 47, 0, 0, 0, 8, 55
+"d:\code\_projects\overflow\qna-forum\src\context\ThemeContext.tsx", "TypeScript React", 0, 0, 0, 24, 0, 0, 0, 8, 32
+"d:\code\_projects\overflow\qna-forum\src\context\UserContext.tsx", "TypeScript React", 0, 0, 0, 72, 0, 0, 0, 13, 85
+"d:\code\_projects\overflow\qna-forum\src\env\client.mjs", "JavaScript", 0, 0, 0, 0, 27, 0, 2, 7, 36
+"d:\code\_projects\overflow\qna-forum\src\env\schema.mjs", "JavaScript", 0, 0, 0, 0, 8, 0, 18, 4, 30
+"d:\code\_projects\overflow\qna-forum\src\env\server.mjs", "JavaScript", 0, 0, 0, 0, 17, 0, 5, 6, 28
+"d:\code\_projects\overflow\qna-forum\src\hooks\useCustomToast.tsx", "TypeScript React", 0, 0, 0, 70, 0, 0, 0, 6, 76
+"d:\code\_projects\overflow\qna-forum\src\hooks\useGlobalLoading.ts", "TypeScript", 6, 0, 0, 0, 0, 0, 0, 4, 10
+"d:\code\_projects\overflow\qna-forum\src\pages\404.tsx", "TypeScript React", 0, 0, 0, 25, 0, 0, 0, 4, 29
+"d:\code\_projects\overflow\qna-forum\src\pages\500.tsx", "TypeScript React", 0, 0, 0, 18, 0, 0, 0, 3, 21
+"d:\code\_projects\overflow\qna-forum\src\pages\_app.tsx", "TypeScript React", 0, 0, 0, 22, 0, 0, 1, 5, 28
+"d:\code\_projects\overflow\qna-forum\src\pages\_document.tsx", "TypeScript React", 0, 0, 0, 23, 0, 0, 0, 2, 25
+"d:\code\_projects\overflow\qna-forum\src\pages\api\trpc\[trpc].ts", "TypeScript", 14, 0, 0, 0, 0, 0, 1, 3, 18
+"d:\code\_projects\overflow\qna-forum\src\pages\create.tsx", "TypeScript React", 0, 0, 0, 15, 0, 0, 0, 6, 21
+"d:\code\_projects\overflow\qna-forum\src\pages\index.tsx", "TypeScript React", 0, 0, 0, 64, 0, 0, 0, 8, 72
+"d:\code\_projects\overflow\qna-forum\src\pages\questions\[uid]\[questionId].tsx", "TypeScript React", 0, 0, 0, 55, 0, 0, 1, 9, 65
+"d:\code\_projects\overflow\qna-forum\src\pages\sign-in.tsx", "TypeScript React", 0, 0, 0, 16, 0, 0, 0, 3, 19
+"d:\code\_projects\overflow\qna-forum\src\pages\sign-up.tsx", "TypeScript React", 0, 0, 0, 16, 0, 0, 0, 3, 19
+"d:\code\_projects\overflow\qna-forum\src\pages\tags\[tagname].tsx", "TypeScript React", 0, 0, 0, 59, 0, 0, 0, 10, 69
+"d:\code\_projects\overflow\qna-forum\src\pages\tags\index.tsx", "TypeScript React", 0, 0, 0, 54, 0, 0, 0, 7, 61
+"d:\code\_projects\overflow\qna-forum\src\pages\users\[uid]\[username].tsx", "TypeScript React", 0, 0, 0, 43, 0, 0, 0, 11, 54
+"d:\code\_projects\overflow\qna-forum\src\pages\users\[uid]\index.tsx", "TypeScript React", 0, 0, 0, 24, 0, 0, 0, 9, 33
+"d:\code\_projects\overflow\qna-forum\src\pages\users\index.tsx", "TypeScript React", 0, 0, 0, 54, 0, 0, 0, 7, 61
+"d:\code\_projects\overflow\qna-forum\src\server\db\mock.json", "JSON", 0, 127754, 0, 0, 0, 0, 0, 1, 127755
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\context.ts", "TypeScript", 32, 0, 0, 0, 0, 0, 13, 9, 54
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\_app.ts", "TypeScript", 20, 0, 0, 0, 0, 0, 1, 3, 24
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\answer\index.ts", "TypeScript", 275, 0, 0, 0, 0, 0, 2, 29, 306
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\answer\replies.ts", "TypeScript", 131, 0, 0, 0, 0, 0, 0, 12, 143
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\answer\votes.ts", "TypeScript", 219, 0, 0, 0, 0, 0, 0, 12, 231
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\auth.ts", "TypeScript", 48, 0, 0, 0, 0, 0, 0, 11, 59
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\example.ts", "TypeScript", 22, 0, 0, 0, 0, 0, 0, 6, 28
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\home\index.ts", "TypeScript", 82, 0, 0, 0, 0, 0, 1, 13, 96
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\mock.ts", "TypeScript", 124, 0, 0, 0, 0, 0, 0, 14, 138
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\question\index.ts", "TypeScript", 273, 0, 0, 0, 0, 0, 1, 30, 304
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\question\replies.ts", "TypeScript", 126, 0, 0, 0, 0, 0, 0, 12, 138
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\question\votes.ts", "TypeScript", 165, 0, 0, 0, 0, 0, 0, 12, 177
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\tags\index.ts", "TypeScript", 121, 0, 0, 0, 0, 0, 2, 20, 143
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\router\users\index.ts", "TypeScript", 63, 0, 0, 0, 0, 0, 1, 12, 76
+"d:\code\_projects\overflow\qna-forum\src\server\trpc\trpc.ts", "TypeScript", 21, 0, 0, 0, 0, 0, 0, 7, 28
+"d:\code\_projects\overflow\qna-forum\src\styles\globals.css", "CSS", 0, 0, 247, 0, 0, 0, 12, 48, 307
+"d:\code\_projects\overflow\qna-forum\src\styles\markdown.css", "CSS", 0, 0, 1007, 0, 0, 0, 0, 2, 1009
+"d:\code\_projects\overflow\qna-forum\src\styles\mdeditor.css", "CSS", 0, 0, 1335, 0, 0, 0, 8, 7, 1350
+"d:\code\_projects\overflow\qna-forum\src\types\defined-types.ts", "TypeScript", 150, 0, 0, 0, 0, 0, 0, 12, 162
+"d:\code\_projects\overflow\qna-forum\src\types\firebase.ts", "TypeScript", 5, 0, 0, 0, 0, 0, 0, 2, 7
+"d:\code\_projects\overflow\qna-forum\src\types\zod-schemas.ts", "TypeScript", 54, 0, 0, 0, 0, 0, 0, 6, 60
+"d:\code\_projects\overflow\qna-forum\src\utils\firebase\admin.ts", "TypeScript", 20, 0, 0, 0, 0, 0, 0, 5, 25
+"d:\code\_projects\overflow\qna-forum\src\utils\firebase\autherror.ts", "TypeScript", 22, 0, 0, 0, 0, 0, 0, 3, 25
+"d:\code\_projects\overflow\qna-forum\src\utils\firebase\index.ts", "TypeScript", 112, 0, 0, 0, 0, 0, 8, 25, 145
+"d:\code\_projects\overflow\qna-forum\src\utils\firebase\secret.json", "JSON", 0, 12, 0, 0, 0, 0, 0, 1, 13
+"d:\code\_projects\overflow\qna-forum\src\utils\index.ts", "TypeScript", 20, 0, 0, 0, 0, 0, 0, 4, 24
+"d:\code\_projects\overflow\qna-forum\src\utils\mockUtils.ts", "TypeScript", 13, 0, 0, 0, 0, 0, 0, 2, 15
+"d:\code\_projects\overflow\qna-forum\src\utils\trpc.ts", "TypeScript", 59, 0, 0, 0, 0, 0, 10, 6, 75
+"Total", "-", 2743, 127766, 2589, 4624, 52, 1349, 352, 1006, 140481

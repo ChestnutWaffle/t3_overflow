@@ -1,0 +1,306 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./mdeditor.css";
+@import "./markdown.css";
+
+.sidebar {
+  height: calc(100vh - 55px);
+  flex-shrink: 0;
+}
+
+.content-part {
+  height: calc(100vh - 55px);
+}
+
+aside > div {
+  border-radius: 0 !important;
+}
+
+@keyframes dropdownclose {
+  0% {
+    top: 56px;
+  }
+  30% {
+    opacity: 50%;
+  }
+  60% {
+    top: 48px;
+    opacity: 0;
+  }
+  100% {
+    top: 48px;
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes dropdownopen {
+  0% {
+    top: 48px;
+    opacity: 0;
+  }
+  30% {
+    opacity: 50%;
+  }
+  60% {
+    top: 56px;
+    opacity: 1;
+  }
+  100% {
+    top: 56px;
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes animate-stripes {
+  0% {
+    left: -40vw;
+    width: 0px;
+  }
+  30% {
+    width: 40vw;
+  }
+  70% {
+    width: 2vw;
+  }
+  100% {
+    left: 100vw;
+    width: 0;
+  }
+}
+
+@keyframes animate-stripes {
+  0% {
+    left: -40vw;
+    width: 0px;
+  }
+  25% {
+    width: 30vw;
+  }
+  50% {
+    width: 30vw;
+  }
+  100% {
+    left: 100vw;
+    width: 40vw;
+  }
+}
+
+#progress {
+  @apply w-[40vw] overflow-x-hidden rounded-full bg-blue-700;
+  animation: animate-stripes 2s ease-in-out infinite;
+}
+
+@keyframes visible-after {
+  0% {
+    opacity: 0;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.visible-after-half {
+  animation: visible-after 0.5s ease-in-out;
+}
+
+html {
+  overflow-y: overlay;
+  /* color-scheme: dark light; */
+}
+
+html ::-webkit-scrollbar {
+  @apply h-[6px] w-[6px];
+}
+/* 
+html ::-webkit-scrollbar {
+  width: 10px;
+  height: 5px;
+} */
+
+/* Track */
+html ::-webkit-scrollbar-track {
+  background: transparent;
+  @apply absolute z-30;
+}
+
+/* Handle */
+html ::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-blue-600/50 hover:bg-blue-600;
+  cursor: pointer;
+}
+
+/* Handle on hover
+html ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+} */
+
+@media (min-width: 375px) {
+  .google-button {
+    display: block;
+  }
+}
+
+.w-md-editor-preview {
+  @apply format-sm format format-blue max-w-none dark:format-invert;
+}
+
+.format blockquote,
+.wmde-markdown blockquote,
+.wmde-markdown-color blockquote {
+  @apply my-4 border-l-4 border-gray-300 bg-gray-50 py-2 px-4 dark:border-gray-500 dark:bg-gray-800 !important;
+}
+
+.format blockquote::before {
+  content: "" !important;
+  background-image: none !important;
+  margin: 0 !important;
+  display: none !important;
+}
+
+.format blockquote > p,
+.wmde-markdown blockquote > p,
+.wmde-markdown-color blockquote > p {
+  font-style: normal !important;
+  font-weight: 400 !important;
+  @apply leading-relaxed text-gray-900 dark:text-white;
+}
+
+.format blockquote > p::before,
+.format blockquote > p::after {
+  content: "" !important;
+}
+
+.format table {
+  @apply w-full overflow-hidden rounded-lg text-left text-sm text-gray-500 dark:text-gray-400;
+}
+
+.format thead {
+  @apply bg-gray-200/60 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400;
+}
+
+.format thead th {
+  @apply whitespace-nowrap py-3 px-6 text-gray-900 dark:text-white;
+}
+
+.format tbody > tr {
+  @apply bg-gray-200 dark:bg-gray-800;
+}
+
+.format tbody td {
+  @apply whitespace-nowrap text-gray-900 dark:text-white;
+}
+
+.format img {
+  @apply max-w-full;
+}
+
+.wmde-markdown h1,
+.wmde-markdown h2,
+.wmde-markdown h3,
+.wmde-markdown h4,
+.wmde-markdown h5,
+.wmde-markdown h6 {
+  @apply m-0 border-0 p-2 text-base font-normal text-gray-600 dark:text-gray-100 !important;
+}
+
+.format hr,
+.wmde-markdown hr,
+.wmde-markdown-color hr {
+  @apply bg-gray-200 dark:bg-gray-700;
+}
+
+.format pre,
+.wmde-markdown pre {
+  font-family: "Source Code Pro", monospace !important;
+
+  @apply bg-gray-200/70 dark:bg-gray-700 !important;
+}
+
+.format img {
+  @apply bg-gray-100 dark:bg-gray-800 !important;
+}
+
+.format pre > code,
+.wmde-markdown pre > code {
+  font-size: 1.1em;
+  font-family: "Source Code Pro", monospace !important;
+  @apply break-words font-medium tracking-wide !important;
+}
+
+.format pre > code *,
+.wmde-markdown pre > code * {
+  font-family: "Source Code Pro", monospace !important;
+}
+
+.w-md-editor-text > .wmde-markdown-color > pre {
+  @apply bg-transparent  !important;
+}
+
+.w-md-editor-text > .wmde-markdown-color > pre > code {
+  @apply font-normal tracking-wider !important;
+}
+
+.w-md-editor-text {
+  padding: 10px 20px !important;
+}
+
+.w-md-editor-text > textarea {
+  @apply font-normal tracking-wider !important;
+}
+
+.w-md-editor-toolbar ul li button {
+  @apply flex h-8 w-8 items-center justify-center text-gray-500 hover:text-blue-600 focus:text-blue-600  dark:text-gray-400 dark:hover:text-blue-600 dark:focus:text-blue-600;
+}
+
+.w-md-editor-toolbar ul li button:disabled {
+  @apply dark:text-gray-600;
+}
+
+.w-md-editor-toolbar ul li.active > button {
+  @apply text-blue-600 dark:text-blue-600;
+}
+
+.w-md-editor-toolbar ul li button svg {
+  @apply h-4 w-4;
+}
+
+.w-md-editor-toolbar,
+.w-md-editor-preview,
+.wmde-markdown,
+.wmde-markdown-color {
+  @apply dark:bg-gray-800;
+}
+
+.token.imports {
+  @apply text-sky-600 dark:text-yellow-400;
+}
+
+.contains-task-list {
+  @apply pl-0 !important;
+}
+
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translate(2rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0);
+  }
+}
+@keyframes fadeOutLeft {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
