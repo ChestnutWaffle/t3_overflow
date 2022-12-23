@@ -2,6 +2,7 @@ import { apps } from "firebase-admin";
 import { initializeApp, cert } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import secret from "./secret.json";
 
 let adminApp;
 let adminDb;
@@ -9,9 +10,9 @@ let adminDb;
 if (!apps.length) {
   adminApp = initializeApp({
     credential: cert({
-      clientEmail: process.env.ADMIN_CLIENT_EMAIL,
-      privateKey: process.env.ADMIN_PRIVATE_KEY,
-      projectId: process.env.ADMIN_PROJECT_ID,
+      clientEmail: secret.client_email,
+      privateKey: secret.private_key,
+      projectId: secret.project_id,
     }),
   });
 
