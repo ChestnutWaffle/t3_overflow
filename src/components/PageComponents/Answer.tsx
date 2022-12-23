@@ -40,7 +40,7 @@ export const Answer = ({ answerData, questionId, parentUid }: PostProps) => {
 
   const upvoteMutation = trpc.answer.vote.upvote.useMutation({
     onSuccess() {
-      utils.answer.read.refetch({
+      utils.answer.read.invalidate({
         questionId: answerData.id,
         uid: answerData.uid,
       });
@@ -48,7 +48,7 @@ export const Answer = ({ answerData, questionId, parentUid }: PostProps) => {
   });
   const downvoteMutation = trpc.answer.vote.downvote.useMutation({
     onSuccess() {
-      utils.answer.read.refetch({
+      utils.answer.read.invalidate({
         questionId: answerData.id,
         uid: answerData.uid,
       });
@@ -57,7 +57,7 @@ export const Answer = ({ answerData, questionId, parentUid }: PostProps) => {
 
   const replyMutation = trpc.answer.reply.create.useMutation({
     onSuccess() {
-      utils.answer.read.refetch({
+      utils.answer.read.invalidate({
         questionId: answerData.id,
         uid: answerData.uid,
       });
@@ -93,6 +93,7 @@ export const Answer = ({ answerData, questionId, parentUid }: PostProps) => {
         displayName: userData.displayName || "",
         username: kebabCase(userData.displayName || ""),
       });
+    setReplyVal("");
   };
 
   return (

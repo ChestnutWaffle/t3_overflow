@@ -1,10 +1,7 @@
 import type { ReplyResult } from "@types-local/defined-types";
 import Preview from "@comp/Markdown/Preview";
 
-import {
-  AiOutlineLike,
-  AiFillLike,
-} from "react-icons/ai";
+import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import Image from "next/image";
 import Link from "next/link";
 import { getInitials } from "@utils/index";
