@@ -1,6 +1,6 @@
 import type { Question } from "@types-local/defined-types";
 import { db } from "@utils/firebase";
-import { getDateString } from "@utils/index";
+import { timestampToNumber } from "@utils/index";
 import {
   collectionGroup,
   query,
@@ -126,10 +126,7 @@ export const tagsRouter = router({
 
           result.push({
             id: document.id,
-            createdAt: getDateString(
-              data.createdAt.seconds * 1000 +
-                data.createdAt.nanoseconds / 1000000
-            ),
+            createdAt: timestampToNumber(data.createdAt),
             tags: data.tags,
             title: data.title,
             uid: data.uid,
