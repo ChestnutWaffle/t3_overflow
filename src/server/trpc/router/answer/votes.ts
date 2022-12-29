@@ -1,11 +1,98 @@
+import { TRPCClientError } from "@trpc/client";
 import { db } from "@utils/firebase";
-import { writeBatch, doc, getDoc, increment } from "firebase/firestore/lite";
+import {
+  writeBatch,
+  doc,
+  getDoc,
+  increment,
+  collection,
+  getCount,
+} from "firebase/firestore/lite";
 import { z } from "zod";
 
-import { router, protectedProcedure } from "../../trpc";
+import { router, protectedProcedure, publicProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 
 export const answerLikesRouter = router({
+  read: publicProcedure
+    .input(
+      z.object({
+        uid: z.string(),
+        questionId: z.string(),
+        answerId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { uid, questionId, answerId } = input;
+      const sessionUid = ctx.session?.uid;
+
+      const upvoteColl = collection(
+        db,
+        "users",
+        uid,
+        "questions",
+        questionId,
+        "answers",
+        answerId,
+        "upvotes"
+      );
+      const downvoteColl = collection(
+        db,
+        "users",
+        uid,
+        "questions",
+        questionId,
+        "answers",
+        answerId,
+        "downvotes"
+      );
+
+      const upvotes = (await getCount(upvoteColl)).data().count;
+      const downvotes = (await getCount(downvoteColl)).data().count;
+
+      const upvote = sessionUid
+        ? (
+            await getDoc(
+              doc(
+                db,
+                "users",
+                uid,
+                "questions",
+                questionId,
+                "answers",
+                answerId,
+                "upvotes",
+                sessionUid
+              )
+            )
+          ).exists()
+        : false;
+
+      const downvote = sessionUid
+        ? (
+            await getDoc(
+              doc(
+                db,
+                "users",
+                uid,
+                "questions",
+                questionId,
+                "answers",
+                answerId,
+                "downvotes",
+                sessionUid
+              )
+            )
+          ).exists()
+        : false;
+
+      return {
+        likes: upvotes - downvotes,
+        upvote,
+        downvote,
+      };
+    }),
+
   upvote: protectedProcedure
     .input(
       z.object({
@@ -76,11 +163,9 @@ export const answerLikesRouter = router({
           await batch.commit();
 
           return {
-            code: 1,
-            data: {
-              downvote: false,
-              upvote: true,
-            },
+            downvote: false,
+            upvote: true,
+            likesInc: 2,
           };
         } else if (upvoteDoc.exists()) {
           batch.delete(upvoteRef);
@@ -100,11 +185,9 @@ export const answerLikesRouter = router({
           );
           await batch.commit();
           return {
-            code: 1,
-            data: {
-              downvote: false,
-              upvote: false,
-            },
+            downvote: false,
+            upvote: false,
+            likesInc: -1,
           };
         } else {
           batch.set(upvoteRef, {
@@ -128,18 +211,13 @@ export const answerLikesRouter = router({
           await batch.commit();
 
           return {
-            code: 1,
-            data: {
-              downvote: false,
-              upvote: true,
-            },
+            downvote: false,
+            upvote: true,
+            likesInc: 1,
           };
         }
       } catch (e) {
-        return {
-          code: -1,
-          message: "Failed to Vote.",
-        };
+        throw new TRPCClientError("Failed to upvote");
       }
     }),
 
@@ -213,11 +291,9 @@ export const answerLikesRouter = router({
           await batch.commit();
 
           return {
-            code: 1,
-            data: {
-              downvote: true,
-              upvote: false,
-            },
+            downvote: true,
+            upvote: false,
+            likesInc: -2,
           };
         } else if (downvoteDoc.exists()) {
           batch.delete(downvoteRef);
@@ -237,11 +313,9 @@ export const answerLikesRouter = router({
           );
           await batch.commit();
           return {
-            code: 1,
-            data: {
-              downvote: false,
-              upvote: false,
-            },
+            downvote: false,
+            upvote: false,
+            likesInc: 1,
           };
         } else {
           batch.set(downvoteRef, {
@@ -265,18 +339,13 @@ export const answerLikesRouter = router({
           await batch.commit();
 
           return {
-            code: 1,
-            data: {
-              downvote: true,
-              upvote: false,
-            },
+            downvote: true,
+            upvote: false,
+            likesInc: -1,
           };
         }
       } catch (e) {
-        return {
-          code: -1,
-          message: "Failed to Vote.",
-        };
+        throw new TRPCClientError("Failed to downvote");
       }
     }),
 });

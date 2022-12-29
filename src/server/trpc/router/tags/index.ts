@@ -71,15 +71,24 @@ export const tagsRouter = router({
     }),
 
   tagname: publicProcedure
-    .input(z.object({ cursor: z.string().nullish(), tagname: z.string() }))
+    .input(
+      z.object({
+        cursor: z.object({ id: z.string(), uid: z.string() }).nullish(),
+        tagname: z.string(),
+      })
+    )
     .query(async ({ input }) => {
       const { cursor, tagname } = input;
       const questionsCollGrp = collectionGroup(db, "questions");
 
-      const LIMIT = 40;
+      const nthDoc =
+        cursor &&
+        (await getDoc(doc(db, "users", cursor.uid, "questions", cursor.id)));
+
+      const LIMIT = 10;
 
       try {
-        const q = !cursor
+        const q = !nthDoc
           ? query(
               questionsCollGrp,
               where("tags", "array-contains", tagname),
@@ -90,7 +99,7 @@ export const tagsRouter = router({
               questionsCollGrp,
               where("tags", "array-contains", tagname),
               orderBy("createdAt", "desc"),
-              startAfter(cursor),
+              startAfter(nthDoc),
               limit(LIMIT)
             );
 
@@ -136,7 +145,10 @@ export const tagsRouter = router({
 
         return {
           result,
-          nextCursor: querySnap.docs.length < LIMIT ? undefined : lastDoc,
+          nextCursor:
+            querySnap.docs.length < LIMIT
+              ? undefined
+              : { id: lastDoc?.id, uid: lastDoc?.data().uid },
         };
       } catch (error) {
         if (error instanceof Error) console.log(error);

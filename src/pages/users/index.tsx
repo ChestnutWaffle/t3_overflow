@@ -34,9 +34,11 @@ const UserListPage: NextPage = () => {
         <h1 className="mb-6 text-3xl font-black tracking-wide">Users</h1>
         <div className="xs:grid-cols-1 mb-12 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {isLoading
-            ? [...Array(12)].map((num) => <UserSkeleton key={num} />)
+            ? [...Array(12)].map((num, idx) => (
+                <UserSkeleton key={num + "=" + idx} />
+              ))
             : data?.pages.map((page, index) => (
-                <Fragment key={index + "" + index}>
+                <Fragment key={index + "-" + index}>
                   {page?.result.map((user) => {
                     return <UserItem key={user.uid} user={user} />;
                   })}

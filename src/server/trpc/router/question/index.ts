@@ -1,9 +1,4 @@
-import type {
-  QuestionData,
-  ReplyData,
-  ReplyResult,
-  UserData,
-} from "@types-local/defined-types";
+import type { QuestionData, UserData } from "@types-local/defined-types";
 import { publicProcedure } from "./../../trpc";
 import { questionReplyRouter } from "./replies";
 import { db } from "@utils/firebase";
@@ -12,7 +7,6 @@ import {
   collection,
   doc,
   getDoc,
-  getDocs,
   increment,
   serverTimestamp,
   setDoc,
@@ -24,7 +18,7 @@ import kebabCase from "lodash/kebabCase";
 
 import { router, protectedProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
-import { getDateString } from "@utils/index";
+import { timestampToNumber } from "@utils/index";
 import { questionLikesRouter } from "./votes";
 
 export const questionRouter = router({
@@ -32,19 +26,42 @@ export const questionRouter = router({
     .input(z.object({ questionId: z.string(), uid: z.string() }))
     .query(async ({ input, ctx }) => {
       const { questionId, uid } = input;
-
       const sessionUid = ctx.session?.uid;
+
+      const upvote = sessionUid
+        ? (
+            await getDoc(
+              doc(
+                db,
+                "users",
+                uid,
+                "questions",
+                questionId,
+                "upvotes",
+                sessionUid
+              )
+            )
+          ).exists()
+        : false;
+
+      const downvote = sessionUid
+        ? (
+            await getDoc(
+              doc(
+                db,
+                "users",
+                uid,
+                "questions",
+                questionId,
+                "downvotes",
+                sessionUid
+              )
+            )
+          ).exists()
+        : false;
 
       const questionRef = doc(db, "users", uid, "questions", questionId);
       const userRef = doc(db, "users", uid);
-      const repliesCollRef = collection(
-        db,
-        "users",
-        uid,
-        "questions",
-        questionId,
-        "replies"
-      );
       try {
         const question = await getDoc(questionRef);
 
@@ -52,76 +69,13 @@ export const questionRouter = router({
 
         const questionData = question.data() as QuestionData;
 
-        const repliesSnap = await getDocs(repliesCollRef);
-
-        const replies: ReplyResult[] = [];
-        for (let i = 0; i < repliesSnap.docs.length; i++) {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const reply = repliesSnap.docs[i]!;
-          if (!reply.exists()) continue;
-
-          const replyData = reply.data() as ReplyData;
-
-          replies.push({
-            id: reply.id,
-            ...replyData,
-            createdAt: getDateString(
-              replyData.createdAt.seconds * 1000 +
-                replyData.createdAt.nanoseconds / 1000000
-            ),
-            updatedAt: getDateString(
-              replyData.updatedAt.seconds * 1000 +
-                replyData.updatedAt.nanoseconds / 1000000
-            ),
-          });
-        }
-
-        const upvote = sessionUid
-          ? (
-              await getDoc(
-                doc(
-                  db,
-                  "users",
-                  uid,
-                  "questions",
-                  questionId,
-                  "upvotes",
-                  sessionUid
-                )
-              )
-            ).exists()
-          : false;
-
-        const downvote = sessionUid
-          ? (
-              await getDoc(
-                doc(
-                  db,
-                  "users",
-                  uid,
-                  "questions",
-                  questionId,
-                  "downvotes",
-                  sessionUid
-                )
-              )
-            ).exists()
-          : false;
-
         const result = {
           id: question.id,
           ...questionData,
           upvote,
           downvote,
-          createdAt: getDateString(
-            questionData.createdAt.seconds * 1000 +
-              questionData.createdAt.nanoseconds / 1000000
-          ),
-          updatedAt: getDateString(
-            questionData.updatedAt.seconds * 1000 +
-              questionData.updatedAt.nanoseconds / 1000000
-          ),
-          replies,
+          createdAt: timestampToNumber(questionData.createdAt),
+          updatedAt: timestampToNumber(questionData.updatedAt),
           user: {
             displayName: user.displayName,
             username: user.username,

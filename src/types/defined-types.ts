@@ -2,7 +2,7 @@ import type { Timestamp, FieldValue } from "firebase/firestore/lite";
 
 export type Question = {
   id: string;
-  createdAt: string;
+  createdAt: number;
   tags: string[];
   title: string;
   uid: string;
@@ -126,19 +126,18 @@ export type AnswerData = {
 
 export type AnswerResult = {
   id: string;
-  createdAt: string;
+  createdAt: number;
   upvote: boolean;
   downvote: boolean;
   detail: string;
   uid: string;
-  updatedAt: string;
+  updatedAt: number;
   likes: number;
   user: {
     username: string;
     photoURL: string;
     displayName: string;
   };
-  replies: ReplyResult[];
 };
 
 export type ReplyData = {
@@ -154,8 +153,8 @@ export type ReplyResult = {
   id: string;
   reply: string;
   uid: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number;
+  updatedAt: number;
   displayName: string;
   username: string;
 };

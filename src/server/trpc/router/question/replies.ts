@@ -1,3 +1,5 @@
+import { TRPCClientError } from "@trpc/client";
+import { publicProcedure } from "./../../trpc";
 import { db } from "@utils/firebase";
 import {
   addDoc,
@@ -6,13 +8,47 @@ import {
   serverTimestamp,
   updateDoc,
   deleteDoc,
+  getDocs,
 } from "firebase/firestore/lite";
 import { z } from "zod";
 
 import { router, protectedProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
+import type { ReplyData, ReplyResult } from "@types-local/defined-types";
+import { timestampToNumber } from "@utils/index";
 
 export const questionReplyRouter = router({
+  read: publicProcedure
+    .input(z.object({ parentUid: z.string(), questionId: z.string() }))
+    .query(async ({ input }) => {
+      const { parentUid, questionId } = input;
+
+      const repliesColl = collection(
+        db,
+        "users",
+        parentUid,
+        "questions",
+        questionId,
+        "replies"
+      );
+      const repliesSnap = await getDocs(repliesColl);
+
+      const replies: ReplyResult[] = [];
+
+      repliesSnap.forEach((reply) => {
+        const data = reply.data() as ReplyData;
+
+        replies.push({
+          id: reply.id,
+          ...data,
+          createdAt: timestampToNumber(data.createdAt),
+          updatedAt: timestampToNumber(data.updatedAt),
+        });
+      });
+
+      return { replies };
+    }),
+
   create: protectedProcedure
     .input(
       z.object({
@@ -44,25 +80,28 @@ export const questionReplyRouter = router({
           questionId,
           "replies"
         );
-        const result = await addDoc(questionReplyColl, {
+
+        const replyResult = {
           reply,
           uid,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
           displayName,
           username,
-        });
+          questionId,
+          questionUid: parentUid,
+        };
+
+        const response = await addDoc(questionReplyColl, replyResult);
 
         return {
-          code: 1,
-          message: "Replied successfully.",
-          data: result.id,
+          id: response.id,
+          ...replyResult,
+          createdAt: new Date().getTime(),
+          updatedAt: new Date().getTime(),
         };
       } catch (e) {
-        return {
-          code: -1,
-          message: "Failed to Reply.",
-        };
+        throw new TRPCClientError("Failed to reply");
       }
     }),
 

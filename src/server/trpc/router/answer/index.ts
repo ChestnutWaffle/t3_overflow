@@ -15,18 +15,12 @@ import {
   getDocs,
   getDoc,
 } from "firebase/firestore/lite";
-import type { Query, DocumentData } from "firebase/firestore/lite";
-import type { Timestamp } from "firebase/firestore/lite";
+import type { Query, DocumentData, Timestamp } from "firebase/firestore/lite";
 import { z } from "zod";
 
 import { router, protectedProcedure, publicProcedure } from "@server/trpc/trpc";
-import { timestampToString } from "@utils/index";
-import type {
-  AnswerResult,
-  AnswerData,
-  ReplyResult,
-  ReplyData,
-} from "@types-local/defined-types";
+import { timestampToNumber } from "@utils/index";
+import type { AnswerResult, AnswerData } from "@types-local/defined-types";
 import { answerLikesRouter } from "./votes";
 
 export const answerRouter = router({
@@ -74,42 +68,12 @@ export const answerRouter = router({
           );
         }
         const querySnap = await getDocs(q);
-        console.log(querySnap.size);
         const result: AnswerResult[] = [];
 
         for (let i = 0; i < querySnap.docs.length; i++) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const document = querySnap.docs[i]!;
           const data = document.data() as AnswerData;
-          const repliesCollRef = collection(
-            db,
-            "users",
-            uid,
-            "questions",
-            questionId,
-            "answers",
-            document.id,
-            "replies"
-          );
-
-          const repliesSnap = await getDocs(repliesCollRef);
-
-          const replies: ReplyResult[] = [];
-          for (let i = 0; i < repliesSnap.docs.length; i++) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const reply = repliesSnap.docs[i]!;
-            if (!reply.exists()) continue;
-
-            const replyData = reply.data() as ReplyData;
-
-            replies.push({
-              id: reply.id,
-              ...replyData,
-              createdAt: timestampToString(replyData.createdAt),
-              updatedAt: timestampToString(replyData.updatedAt),
-            });
-          }
-
           const userDoc = await getDoc(doc(db, "users", data.uid));
           const userData = userDoc.data() as {
             displayName: string;
@@ -162,14 +126,13 @@ export const answerRouter = router({
             upvote,
             downvote,
             id: document.id,
-            createdAt: timestampToString(data.createdAt),
-            updatedAt: timestampToString(data.updatedAt),
+            createdAt: timestampToNumber(data.createdAt),
+            updatedAt: timestampToNumber(data.updatedAt),
             user: {
               displayName: userData?.displayName,
               photoURL: userData?.photoURL,
               username: userData?.username,
             },
-            replies,
           });
         }
 

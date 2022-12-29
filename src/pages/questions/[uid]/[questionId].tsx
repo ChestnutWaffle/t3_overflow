@@ -88,13 +88,13 @@ const QuestionPage: NextPage = () => {
                     />
                   );
                 })}
-                {page?.result.length === 0 && (
-                  <span className="text-xl font-semibold text-gray-500">
-                    Be the first to Answer.
-                  </span>
-                )}
               </Fragment>
             ))}
+            {data?.pages.length === 0 && (
+              <span className="text-xl font-semibold text-gray-500">
+                Be the first to Answer.
+              </span>
+            )}
           </div>
         )}
         {hasNextPage ? (

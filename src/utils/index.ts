@@ -10,9 +10,9 @@ export function getDateString(unixDate: number | undefined) {
   });
 }
 
-export function timestampToString(timestamp: Timestamp) {
+export function timestampToNumber(timestamp: Timestamp) {
   const { seconds, nanoseconds } = timestamp;
-  return getDateString(seconds * 1000 + nanoseconds / 1000000);
+  return seconds * 1000 + nanoseconds / 1000000;
 }
 
 export function getInitials(fullname: string) {

@@ -1,3 +1,6 @@
+import { TRPCClientError } from "@trpc/client";
+import type { ReplyData, ReplyResult } from "@types-local/defined-types";
+import { publicProcedure } from "./../../trpc";
 import { db } from "@utils/firebase";
 import {
   addDoc,
@@ -6,13 +9,54 @@ import {
   serverTimestamp,
   updateDoc,
   deleteDoc,
+  getDocs,
 } from "firebase/firestore/lite";
 import { z } from "zod";
 
 import { router, protectedProcedure } from "@server/trpc/trpc";
 import { TRPCError } from "@trpc/server";
+import { timestampToNumber } from "@utils/index";
 
 export const answerReplyRouter = router({
+  read: publicProcedure
+    .input(
+      z.object({
+        parentUid: z.string(),
+        questionId: z.string(),
+        answerId: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { parentUid, questionId, answerId } = input;
+
+      const repliesColl = collection(
+        db,
+        "users",
+        parentUid,
+        "questions",
+        questionId,
+        "answers",
+        answerId,
+        "replies"
+      );
+      const repliesSnap = await getDocs(repliesColl);
+
+      const replies: ReplyResult[] = [];
+
+      repliesSnap.forEach((reply) => {
+        const data = reply.data() as ReplyData;
+
+        replies.push({
+          id: reply.id,
+          ...data,
+          createdAt: timestampToNumber(data.createdAt),
+          updatedAt: timestampToNumber(data.updatedAt),
+        });
+      });
+
+      return { replies };
+    }),
+
   create: protectedProcedure
     .input(
       z.object({
@@ -54,27 +98,29 @@ export const answerReplyRouter = router({
           answerId,
           "replies"
         );
-        const result = await addDoc(answerReplyColl, {
+
+        const replyResult = {
           reply,
-          user: doc(db, "users", uid),
           uid,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
-
           displayName,
           username,
-        });
+          answerId,
+          questionId,
+          questionUid: parentUid,
+        };
+
+        const response = await addDoc(answerReplyColl, replyResult);
 
         return {
-          code: 1,
-          message: "Replied successfully.",
-          data: result.id,
+          id: response.id,
+          ...replyResult,
+          createdAt: new Date().getTime(),
+          updatedAt: new Date().getTime(),
         };
       } catch (e) {
-        return {
-          code: -1,
-          message: "Failed to Reply.",
-        };
+        throw new TRPCClientError("Failed to reply");
       }
     }),
 

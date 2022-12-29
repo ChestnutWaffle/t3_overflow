@@ -1,4 +1,4 @@
-import { getDateString } from "@utils/index";
+import { timestampToNumber } from "@utils/index";
 import { db } from "@utils/firebase";
 import {
   collectionGroup,
@@ -10,12 +10,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore/lite";
-import type {
-  DocumentData,
-  Query,
-  Timestamp,
-  QueryDocumentSnapshot,
-} from "firebase/firestore/lite";
+import type { DocumentData, Query, Timestamp } from "firebase/firestore/lite";
 import { z } from "zod";
 
 import { router, publicProcedure } from "../../trpc";
@@ -24,19 +19,25 @@ import { TRPCClientError } from "@trpc/client";
 
 export const homeRouter = router({
   questions: publicProcedure
-    .input(z.object({ cursor: z.any().nullish() }))
+    .input(
+      z.object({
+        cursor: z.object({ id: z.string(), uid: z.string() }).nullish(),
+      })
+    )
     .query(async ({ input }) => {
-      const cursor = input.cursor as
-        | QueryDocumentSnapshot<DocumentData>
-        | undefined;
+      const { cursor } = input;
       const questionsCollGrp = collectionGroup(db, "questions");
 
-      const LIMIT = 40;
+      const nthDoc =
+        cursor &&
+        (await getDoc(doc(db, "users", cursor.uid, "questions", cursor.id)));
+
+      const LIMIT = 10;
 
       let q: Query<DocumentData>;
 
       try {
-        if (!cursor) {
+        if (!nthDoc) {
           q = query(
             questionsCollGrp,
             orderBy("createdAt", "desc"),
@@ -46,7 +47,7 @@ export const homeRouter = router({
           q = query(
             questionsCollGrp,
             orderBy("createdAt", "desc"),
-            startAfter(cursor),
+            startAfter(nthDoc),
             limit(LIMIT)
           );
         }
@@ -74,10 +75,7 @@ export const homeRouter = router({
 
           result.push({
             id: document.id,
-            createdAt: getDateString(
-              data.createdAt.seconds * 1000 +
-                data.createdAt.nanoseconds / 1000000
-            ),
+            createdAt: timestampToNumber(data.createdAt),
             tags: data.tags,
             title: data.title,
             uid: data.uid,
@@ -89,11 +87,14 @@ export const homeRouter = router({
           });
         }
 
-        const lastDoc = querySnap.docs[querySnap.docs.length - 1];
+        const lastDoc = querySnap.docs.at(-1);
 
         return {
           result,
-          nextCursor: querySnap.docs.length < LIMIT ? undefined : lastDoc,
+          nextCursor:
+            querySnap.docs.length < LIMIT
+              ? undefined
+              : { id: lastDoc?.id, uid: lastDoc?.data().uid },
         };
       } catch (error) {
         throw new TRPCClientError(`Failed to fetch data ${error}`);

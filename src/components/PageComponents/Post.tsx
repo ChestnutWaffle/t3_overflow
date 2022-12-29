@@ -1,5 +1,5 @@
 import type { Question } from "@types-local/defined-types";
-import { getInitials } from "@utils/.";
+import { getDateString, getInitials } from "@utils/.";
 import Image from "next/image";
 import Link from "next/link";
 import Tags from "./Tags";
@@ -42,7 +42,9 @@ export default function Post({ question }: PostProp) {
               </span>
             </div>
           </Link>
-          <span className="text-right">{`asked ${question.createdAt}`}</span>
+          <span className="text-right">
+            asked {getDateString(question.createdAt)}
+          </span>
         </div>
       </div>
     </div>

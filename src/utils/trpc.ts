@@ -31,8 +31,11 @@ export const trpc = createTRPCNext<AppRouter>({
             return token
               ? {
                   Authorization: `Bearer ${token}`,
+                  "x-ssr": "1",
                 }
-              : {};
+              : {
+                  "x-ssr": "1",
+                };
           },
         }),
       ],

@@ -7,6 +7,7 @@ import SignOutButton from "./SignoutButton";
 import Loading from "./Loading";
 import { ThemeContext } from "@context/ThemeContext";
 import { UserCtx } from "@context/UserContext";
+import { getInitials } from "@utils/index";
 
 type NavbarProps = {
   setMobileSidebar: React.Dispatch<React.SetStateAction<boolean>>;
@@ -71,14 +72,20 @@ function Navbar({ setMobileSidebar }: NavbarProps) {
               <button
                 id="dropdownUserAvatarButton"
                 onMouseEnter={showDropdown}
-                className="flex rounded-full text-sm "
+                className="flex rounded-lg text-sm "
                 type="button"
               >
                 <span className="sr-only">Open user menu</span>
-                {userData.photoURL ? (
-                  <div className="my-auto h-10 w-10 overflow-clip rounded-full focus:ring-2 focus:ring-gray-300 focus:ring-offset-4 dark:focus:ring-gray-600">
+                {userData.displayName ? (
+                  <div className="my-auto h-10 w-10 overflow-clip rounded-lg focus:ring-2 focus:ring-gray-300 focus:ring-offset-4 dark:focus:ring-gray-600">
                     <Image
-                      src={userData.photoURL}
+                      src={
+                        !userData.photoURL || userData.photoURL === ""
+                          ? `https://dummyimage.com/400x400/000/fff.jpg&text=${getInitials(
+                              userData.displayName
+                            ).join("")}`
+                          : userData.photoURL
+                      }
                       alt="user photo"
                       width="45"
                       height="45"
@@ -89,15 +96,7 @@ function Navbar({ setMobileSidebar }: NavbarProps) {
                     alt="user photo"
                     rounded={true}
                     bordered={true}
-                    placeholderInitials={
-                      userData.displayName
-                        ? `${userData.displayName
-                            ?.split(" ")[0]
-                            ?.charAt(0)}${userData.displayName
-                            ?.split(" ")[1]
-                            ?.charAt(0)}`
-                        : "🗿"
-                    }
+                    placeholderInitials={"🗿"}
                   />
                 )}
               </button>
