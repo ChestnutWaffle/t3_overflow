@@ -19,7 +19,6 @@ export type UserData = {
 
 export const getUserData = async (user: string) => {
   const userRef = await userDoc(user).get();
-  if (!userRef.exists) return undefined;
   const userData = userRef.data() as UserData;
   return {
     uid: userRef.id,

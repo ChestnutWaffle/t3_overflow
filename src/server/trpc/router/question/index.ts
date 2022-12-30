@@ -47,9 +47,9 @@ export const questionRouter = router({
           createdAt: timestampToNumber(questionData.createdAt),
           updatedAt: timestampToNumber(questionData.updatedAt),
           user: {
-            displayName: user?.displayName,
-            username: user?.username,
-            photoURL: user?.photoURL,
+            displayName: user.displayName,
+            username: user.username,
+            photoURL: user.photoURL,
           },
         };
 
