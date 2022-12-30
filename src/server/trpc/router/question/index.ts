@@ -1,25 +1,20 @@
-import type { QuestionData, UserData } from "@types-local/defined-types";
-import { publicProcedure } from "./../../trpc";
+import type { QuestionData } from "@types-local/defined-types";
+import { publicProcedure, router, protectedProcedure } from "@server/trpc/trpc";
 import { questionReplyRouter } from "./replies";
-import { db } from "@utils/firebase";
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  increment,
-  serverTimestamp,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore/lite";
 import { z } from "zod";
 import kebabCase from "lodash/kebabCase";
-
-import { router, protectedProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { timestampToNumber } from "@utils/index";
 import { questionLikesRouter } from "./votes";
+import {
+  questionDoc,
+  questionDownvoteDoc,
+  questionsColl,
+  questionUpvoteDoc,
+  tagsDoc,
+} from "@utils/firebase/admin";
+import { getUserData } from "@utils/firebase/admin/docdata";
+import { FieldValue } from "firebase-admin/firestore";
 
 export const questionRouter = router({
   read: publicProcedure
@@ -29,43 +24,18 @@ export const questionRouter = router({
       const sessionUid = ctx.session?.uid;
 
       const upvote = sessionUid
-        ? (
-            await getDoc(
-              doc(
-                db,
-                "users",
-                uid,
-                "questions",
-                questionId,
-                "upvotes",
-                sessionUid
-              )
-            )
-          ).exists()
+        ? (await questionUpvoteDoc(uid, questionId, sessionUid).get()).exists
         : false;
 
       const downvote = sessionUid
-        ? (
-            await getDoc(
-              doc(
-                db,
-                "users",
-                uid,
-                "questions",
-                questionId,
-                "downvotes",
-                sessionUid
-              )
-            )
-          ).exists()
+        ? (await questionDownvoteDoc(uid, questionId, sessionUid).get()).exists
         : false;
 
-      const questionRef = doc(db, "users", uid, "questions", questionId);
-      const userRef = doc(db, "users", uid);
+      const questionRef = questionDoc(uid, questionId);
       try {
-        const question = await getDoc(questionRef);
+        const question = await questionRef.get();
 
-        const user = (await getDoc(userRef)).data() as UserData;
+        const user = await getUserData(uid);
 
         const questionData = question.data() as QuestionData;
 
@@ -77,9 +47,9 @@ export const questionRouter = router({
           createdAt: timestampToNumber(questionData.createdAt),
           updatedAt: timestampToNumber(questionData.updatedAt),
           user: {
-            displayName: user.displayName,
-            username: user.username,
-            photoURL: user.photoURL,
+            displayName: user?.displayName,
+            username: user?.username,
+            photoURL: user?.photoURL,
           },
         };
 
@@ -125,28 +95,26 @@ export const questionRouter = router({
       }
 
       try {
-        const questionColl = collection(db, "users", uid, "questions");
-        await addDoc(questionColl, {
+        await questionsColl(uid).add({
           title: question,
           slug: kebabCase(question),
           detail,
           tags,
           uid,
           likes: 0,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
+          createdAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
         });
 
         tags.forEach(async (tag) => {
-          const tagRef = doc(db, "tags", tag);
-          const tagDoc = await getDoc(tagRef);
+          const tagRef = tagsDoc(tag);
 
-          if (tagDoc.exists()) {
-            await updateDoc(tagRef, {
-              count: increment(1),
+          if ((await tagRef.get()).exists) {
+            await tagRef.update({
+              count: FieldValue.increment(1),
             });
           } else {
-            await setDoc(tagRef, { count: increment(1), name: tag });
+            await tagRef.set({ count: FieldValue.increment(1), name: tag });
           }
         });
 
@@ -208,26 +176,26 @@ export const questionRouter = router({
         return !(tag in tags);
       });
       filteredOld.forEach(async (tag) => {
-        const tagRef = doc(db, "tags", tag);
-        await updateDoc(tagRef, {
-          count: increment(-1),
+        const tagRef = tagsDoc(tag);
+        await tagRef.update({
+          count: FieldValue.increment(-1),
         });
       });
 
-      const questionRef = doc(db, "users", uid, "questions", questionId);
-      await updateDoc(questionRef, {
+      const questionRef = questionDoc(uid, questionId);
+      await questionRef.update({
         detail,
         tags,
-        updatedAt: serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
       });
 
       const filteredNew = tags.filter((tag) => {
         return !(tag in oldTags);
       });
       filteredNew.forEach(async (tag) => {
-        const tagRef = doc(db, "tags", tag);
-        await updateDoc(tagRef, {
-          count: increment(1),
+        const tagRef = tagsDoc(tag);
+        await tagRef.update({
+          count: FieldValue.increment(1),
         });
       });
     }),
@@ -249,9 +217,9 @@ export const questionRouter = router({
         });
       }
 
-      const questionRef = doc(db, "users", uid, "questions", questionId);
+      const questionRef = questionDoc(uid, questionId);
 
-      await deleteDoc(questionRef);
+      await questionRef.delete();
     }),
 
   reply: questionReplyRouter,

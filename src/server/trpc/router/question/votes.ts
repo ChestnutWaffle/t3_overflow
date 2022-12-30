@@ -1,18 +1,18 @@
 import { TRPCClientError } from "@trpc/client";
-import { publicProcedure } from "@server/trpc/trpc";
-import { db } from "@utils/firebase";
-import {
-  writeBatch,
-  doc,
-  getDoc,
-  increment,
-  collection,
-} from "firebase/firestore/lite";
-import { getCount } from "firebase/firestore/lite";
+import { publicProcedure, router, protectedProcedure } from "@server/trpc/trpc";
 import { z } from "zod";
 
-import { router, protectedProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
+import {
+  questionDoc,
+  questionDownvoteDoc,
+  questionDownvotesColl,
+  questionUpvoteDoc,
+  questionUpvotesColl,
+  userDoc,
+  writeBatch,
+} from "@utils/firebase/admin";
+import { FieldValue } from "firebase-admin/firestore";
 
 export const questionLikesRouter = router({
   read: publicProcedure
@@ -21,56 +21,19 @@ export const questionLikesRouter = router({
       const { uid, questionId } = input;
       const sessionUid = ctx.session?.uid;
 
-      const upvoteColl = collection(
-        db,
-        "users",
-        uid,
-        "questions",
-        questionId,
-        "upvotes"
-      );
-      const downvoteColl = collection(
-        db,
-        "users",
-        uid,
-        "questions",
-        questionId,
-        "downvotes"
-      );
-
-      const upvotes = (await getCount(upvoteColl)).data().count;
-      const downvotes = (await getCount(downvoteColl)).data().count;
+      const upvotes = (
+        await questionUpvotesColl(uid, questionId).count().get()
+      ).data().count;
+      const downvotes = (
+        await questionDownvotesColl(uid, questionId).count().get()
+      ).data().count;
 
       const upvote = sessionUid
-        ? (
-            await getDoc(
-              doc(
-                db,
-                "users",
-                uid,
-                "questions",
-                questionId,
-                "upvotes",
-                sessionUid
-              )
-            )
-          ).exists()
+        ? (await questionUpvoteDoc(uid, questionId, sessionUid).get()).exists
         : false;
 
       const downvote = sessionUid
-        ? (
-            await getDoc(
-              doc(
-                db,
-                "users",
-                uid,
-                "questions",
-                questionId,
-                "downvotes",
-                sessionUid
-              )
-            )
-          ).exists()
+        ? (await questionDownvoteDoc(uid, questionId, sessionUid).get()).exists
         : false;
 
       return {
@@ -99,37 +62,24 @@ export const questionLikesRouter = router({
       }
 
       try {
-        const upvoteRef = doc(
-          db,
-          "users",
-          parentUid,
-          "questions",
-          questionId,
-          "upvotes",
-          uid
-        );
-        const downvoteRef = doc(
-          db,
-          "users",
-          parentUid,
-          "questions",
-          questionId,
-          "downvotes",
-          uid
-        );
-        const upvoteDoc = await getDoc(upvoteRef);
-        const downvoteDoc = await getDoc(downvoteRef);
+        const upvoteRef = questionUpvoteDoc(parentUid, questionId, uid);
+        const downvoteRef = questionDownvoteDoc(parentUid, questionId, uid);
+        const upvoteSnap = await upvoteRef.get();
+        const downvoteSnap = await downvoteRef.get();
 
-        const batch = writeBatch(db);
+        const questionRef = questionDoc(parentUid, questionId);
 
-        if (downvoteDoc.exists()) {
+        const batch = writeBatch();
+
+        if (downvoteSnap.exists) {
+          console.log("downvoteSnap: ", downvoteSnap.exists);
           batch.delete(downvoteRef);
           batch.set(upvoteRef, {
             uid,
-            user: doc(db, "users", uid),
+            user: userDoc(uid),
           });
-          batch.update(doc(db, "users", parentUid, "questions", questionId), {
-            likes: increment(2),
+          batch.update(questionRef, {
+            likes: FieldValue.increment(2),
           });
           await batch.commit();
 
@@ -138,10 +88,10 @@ export const questionLikesRouter = router({
             upvote: true,
             likesInc: 2,
           };
-        } else if (upvoteDoc.exists()) {
+        } else if (upvoteSnap.exists) {
           batch.delete(upvoteRef);
-          batch.update(doc(db, "users", parentUid, "questions", questionId), {
-            likes: increment(-1),
+          batch.update(questionRef, {
+            likes: FieldValue.increment(-1),
           });
           await batch.commit();
           return {
@@ -152,10 +102,10 @@ export const questionLikesRouter = router({
         } else {
           batch.set(upvoteRef, {
             uid,
-            user: doc(db, "users", uid),
+            user: userDoc(uid),
           });
-          batch.update(doc(db, "users", parentUid, "questions", questionId), {
-            likes: increment(1),
+          batch.update(questionRef, {
+            likes: FieldValue.increment(1),
           });
           await batch.commit();
           return {
@@ -188,37 +138,23 @@ export const questionLikesRouter = router({
       }
 
       try {
-        const upvoteRef = doc(
-          db,
-          "users",
-          parentUid,
-          "questions",
-          questionId,
-          "upvotes",
-          uid
-        );
-        const downvoteRef = doc(
-          db,
-          "users",
-          parentUid,
-          "questions",
-          questionId,
-          "downvotes",
-          uid
-        );
-        const downvoteDoc = await getDoc(downvoteRef);
-        const upvoteDoc = await getDoc(upvoteRef);
+        const upvoteRef = questionUpvoteDoc(parentUid, questionId, uid);
+        const downvoteRef = questionDownvoteDoc(parentUid, questionId, uid);
+        const upvoteSnap = await upvoteRef.get();
+        const downvoteSnap = await downvoteRef.get();
 
-        const batch = writeBatch(db);
+        const questionRef = questionDoc(parentUid, questionId);
 
-        if (upvoteDoc.exists()) {
+        const batch = writeBatch();
+
+        if (upvoteSnap.exists) {
           batch.delete(upvoteRef);
           batch.set(downvoteRef, {
             uid,
-            user: doc(db, "users", uid),
+            user: userDoc(uid),
           });
-          batch.update(doc(db, "users", parentUid, "questions", questionId), {
-            likes: increment(-2),
+          batch.update(questionRef, {
+            likes: FieldValue.increment(-2),
           });
           await batch.commit();
 
@@ -227,10 +163,10 @@ export const questionLikesRouter = router({
             upvote: false,
             likesInc: -2,
           };
-        } else if (downvoteDoc.exists()) {
+        } else if (downvoteSnap.exists) {
           batch.delete(downvoteRef);
-          batch.update(doc(db, "users", parentUid, "questions", questionId), {
-            likes: increment(1),
+          batch.update(questionRef, {
+            likes: FieldValue.increment(1),
           });
           await batch.commit();
           return {
@@ -241,10 +177,10 @@ export const questionLikesRouter = router({
         } else {
           batch.set(downvoteRef, {
             uid,
-            user: doc(db, "users", uid),
+            user: userDoc(uid),
           });
-          batch.update(doc(db, "users", parentUid, "questions", questionId), {
-            likes: increment(-1),
+          batch.update(questionRef, {
+            likes: FieldValue.increment(-1),
           });
           await batch.commit();
 

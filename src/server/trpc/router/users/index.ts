@@ -1,43 +1,37 @@
-import { db } from "@utils/firebase";
-import {
-  collectionGroup,
-  query,
-  orderBy,
-  limit,
-  getDocs,
-  startAfter,
-  doc,
-  getDoc,
-  where,
-} from "firebase/firestore/lite";
-import type { Timestamp } from "firebase/firestore/lite";
 import { z } from "zod";
 
 import { router, publicProcedure } from "../../trpc";
-import type { UserData } from "@types-local/defined-types";
 import { timestampToNumber } from "@utils/index";
 import { TRPCClientError } from "@trpc/client";
+import { getUserData } from "@utils/firebase/admin/docdata";
+import {
+  answersCollGrp,
+  docWithPath,
+  questionDoc,
+  questionsCollGrp,
+  repliesCollGrp,
+  userDoc,
+  usersColl,
+} from "@utils/firebase/admin";
 
 export const usersRouter = router({
   userslist: publicProcedure
-    .input(z.object({ cursor: z.any().nullish() }))
+    .input(z.object({ cursor: z.string().nullish() }))
     .query(async ({ input }) => {
       const { cursor } = input;
-      const usersCollGrp = collectionGroup(db, "users");
 
       const LIMIT = 32;
 
-      try {
-        const q = !cursor
-          ? query(usersCollGrp, orderBy("displayName", "asc"), limit(LIMIT))
-          : query(
-              usersCollGrp,
-              orderBy("displayName", "asc"),
-              startAfter(cursor),
-              limit(LIMIT)
-            );
+      const nthDoc = cursor ? await userDoc(cursor).get() : undefined;
 
-        const querySnap = await getDocs(q);
+      try {
+        const q = !nthDoc
+          ? usersColl.orderBy("displayName", "asc").limit(LIMIT)
+          : usersColl
+              .orderBy("displayName", "asc")
+              .startAfter(nthDoc)
+              .limit(LIMIT);
+        const querySnap = await q.get();
 
         const result: {
           uid: string;
@@ -51,7 +45,7 @@ export const usersRouter = router({
           const document = querySnap.docs[i]!;
           const data = document.data() as {
             displayName: string;
-            createdAt: Timestamp;
+            createdAt: FirebaseFirestore.Timestamp;
             email: string;
             emailVerified: boolean;
             photoURL: string;
@@ -72,7 +66,7 @@ export const usersRouter = router({
 
         return {
           result,
-          nextCursor: querySnap.docs.length < LIMIT ? undefined : lastDoc,
+          nextCursor: querySnap.docs.length < LIMIT ? undefined : lastDoc?.id,
         };
       } catch (error) {
         if (error instanceof Error) console.log(error);
@@ -88,9 +82,7 @@ export const usersRouter = router({
     .query(async ({ input, ctx }) => {
       const { parentUid } = input;
       const sessionUid = ctx.session?.uid;
-
-      const userRef = doc(db, "users", parentUid);
-      const userData = (await getDoc(userRef)).data() as UserData;
+      const userData = await getUserData(parentUid);
 
       return {
         userData,
@@ -108,31 +100,24 @@ export const usersRouter = router({
     .query(async ({ input }) => {
       const { parentUid, cursor } = input;
 
-      const coll = collectionGroup(db, "questions");
-
       const LIMIT = 5;
 
-      const nthDoc =
-        cursor &&
-        (await getDoc(doc(db, "users", parentUid, "questions", cursor)));
+      const nthDoc = cursor
+        ? await questionDoc(parentUid, cursor).get()
+        : undefined;
 
       const q = !nthDoc
-        ? query(
-            coll,
-            where("uid", "==", parentUid),
-            orderBy("createdAt", "desc"),
-            limit(LIMIT)
-          )
-        : query(
-            coll,
-            where("uid", "==", parentUid),
-            orderBy("createdAt", "desc"),
-            startAfter(nthDoc),
-            limit(LIMIT)
-          );
-
+        ? questionsCollGrp
+            .where("uid", "==", parentUid)
+            .orderBy("createdAt", "desc")
+            .limit(LIMIT)
+        : questionsCollGrp
+            .where("uid", "==", parentUid)
+            .orderBy("createdAt", "desc")
+            .startAfter(nthDoc)
+            .limit(LIMIT);
       try {
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await q.get();
         const result: {
           id: string;
           createdAt: number;
@@ -170,29 +155,23 @@ export const usersRouter = router({
     .query(async ({ input }) => {
       const { parentUid, cursor } = input;
 
-      const coll = collectionGroup(db, "answers");
       const LIMIT = 5;
 
       const nthDoc =
-        cursor && cursor !== "" ? await getDoc(doc(db, cursor)) : undefined;
+        cursor && cursor !== "" ? await docWithPath(cursor).get() : undefined;
 
       const q = !nthDoc
-        ? query(
-            coll,
-            where("uid", "==", parentUid),
-            orderBy("createdAt", "desc"),
-            limit(LIMIT)
-          )
-        : query(
-            coll,
-            where("uid", "==", parentUid),
-            orderBy("createdAt", "desc"),
-            startAfter(nthDoc),
-            limit(LIMIT)
-          );
-
+        ? answersCollGrp
+            .where("uid", "==", parentUid)
+            .orderBy("createdAt", "desc")
+            .limit(LIMIT)
+        : answersCollGrp
+            .where("uid", "==", parentUid)
+            .orderBy("createdAt", "desc")
+            .startAfter(nthDoc)
+            .limit(LIMIT);
       try {
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await q.get();
         const result: {
           id: string;
           createdAt: number;
@@ -236,29 +215,23 @@ export const usersRouter = router({
     .query(async ({ input }) => {
       const { parentUid, cursor } = input;
 
-      const coll = collectionGroup(db, "replies");
       const LIMIT = 5;
 
       const nthDoc =
-        cursor && cursor !== "" ? await getDoc(doc(db, cursor)) : undefined;
+        cursor && cursor !== "" ? await docWithPath(cursor).get() : undefined;
 
       const q = !nthDoc
-        ? query(
-            coll,
-            where("uid", "==", parentUid),
-            orderBy("createdAt", "desc"),
-            limit(LIMIT)
-          )
-        : query(
-            coll,
-            where("uid", "==", parentUid),
-            orderBy("createdAt", "desc"),
-            startAfter(nthDoc),
-            limit(LIMIT)
-          );
-
+        ? repliesCollGrp
+            .where("uid", "==", parentUid)
+            .orderBy("createdAt", "desc")
+            .limit(LIMIT)
+        : repliesCollGrp
+            .where("uid", "==", parentUid)
+            .orderBy("createdAt", "desc")
+            .startAfter(nthDoc)
+            .limit(LIMIT);
       try {
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await q.get();
         const result: {
           id: string;
           createdAt: number;

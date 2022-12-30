@@ -1,21 +1,11 @@
 import { timestampToNumber } from "@utils/index";
-import { db } from "@utils/firebase";
-import {
-  collectionGroup,
-  query,
-  orderBy,
-  limit,
-  getDocs,
-  startAfter,
-  doc,
-  getDoc,
-} from "firebase/firestore/lite";
-import type { DocumentData, Query, Timestamp } from "firebase/firestore/lite";
 import { z } from "zod";
 
 import { router, publicProcedure } from "../../trpc";
 import type { Question } from "@types-local/defined-types";
 import { TRPCClientError } from "@trpc/client";
+import { questionDoc, questionsCollGrp } from "@utils/firebase/admin";
+import { getUserData } from "@utils/firebase/admin/docdata";
 
 export const homeRouter = router({
   questions: publicProcedure
@@ -26,33 +16,21 @@ export const homeRouter = router({
     )
     .query(async ({ input }) => {
       const { cursor } = input;
-      const questionsCollGrp = collectionGroup(db, "questions");
 
-      const nthDoc =
-        cursor &&
-        (await getDoc(doc(db, "users", cursor.uid, "questions", cursor.id)));
+      const nthDoc = cursor
+        ? await questionDoc(cursor.uid, cursor.id).get()
+        : undefined;
 
       const LIMIT = 10;
 
-      let q: Query<DocumentData>;
-
       try {
-        if (!nthDoc) {
-          q = query(
-            questionsCollGrp,
-            orderBy("createdAt", "desc"),
-            limit(LIMIT)
-          );
-        } else {
-          q = query(
-            questionsCollGrp,
-            orderBy("createdAt", "desc"),
-            startAfter(nthDoc),
-            limit(LIMIT)
-          );
-        }
-
-        const querySnap = await getDocs(q);
+        const q = !nthDoc
+          ? questionsCollGrp.orderBy("createdAt", "desc").limit(LIMIT)
+          : questionsCollGrp
+              .orderBy("createdAt", "desc")
+              .startAfter(nthDoc)
+              .limit(LIMIT);
+        const querySnap = await q.get();
 
         const result: Question[] = [];
 
@@ -60,17 +38,7 @@ export const homeRouter = router({
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const document = querySnap.docs[i]!;
           const data = document.data();
-          const userDoc = await getDoc(doc(db, "users", data.uid));
-          const userData = userDoc.data() as {
-            displayName: string;
-            createdAt: Timestamp;
-            updatedAt: Timestamp;
-            email: string;
-            emailVerified: boolean;
-            photoURL: string;
-            username: string;
-          };
-
+          const userData = await getUserData(data.uid);
           if (!userData) continue;
 
           result.push({
@@ -80,9 +48,9 @@ export const homeRouter = router({
             title: data.title,
             uid: data.uid,
             user: {
-              displayName: userData?.displayName,
-              photoURL: userData?.photoURL,
-              username: userData?.username,
+              displayName: userData.displayName,
+              photoURL: userData.photoURL,
+              username: userData.username,
             },
           });
         }

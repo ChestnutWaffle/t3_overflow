@@ -1,21 +1,20 @@
 import { TRPCClientError } from "@trpc/client";
-import type { ReplyData, ReplyResult } from "@types-local/defined-types";
-import { publicProcedure } from "./../../trpc";
-import { db } from "@utils/firebase";
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  updateDoc,
-  deleteDoc,
-  getDocs,
-} from "firebase/firestore/lite";
+import type { ReplyResult } from "@types-local/defined-types";
+import { publicProcedure, router, protectedProcedure } from "@server/trpc/trpc";
 import { z } from "zod";
-
-import { router, protectedProcedure } from "@server/trpc/trpc";
 import { TRPCError } from "@trpc/server";
 import { timestampToNumber } from "@utils/index";
+import { answerReplyColl, answerReplyDoc } from "@utils/firebase/admin";
+import { FieldValue } from "firebase-admin/firestore";
+
+type ReplyData = {
+  reply: string;
+  uid: string;
+  createdAt: FirebaseFirestore.Timestamp;
+  updatedAt: FirebaseFirestore.Timestamp;
+  displayName: string;
+  username: string;
+};
 
 export const answerReplyRouter = router({
   read: publicProcedure
@@ -29,17 +28,11 @@ export const answerReplyRouter = router({
     .query(async ({ input }) => {
       const { parentUid, questionId, answerId } = input;
 
-      const repliesColl = collection(
-        db,
-        "users",
+      const repliesSnap = await answerReplyColl(
         parentUid,
-        "questions",
         questionId,
-        "answers",
-        answerId,
-        "replies"
-      );
-      const repliesSnap = await getDocs(repliesColl);
+        answerId
+      ).get();
 
       const replies: ReplyResult[] = [];
 
@@ -88,22 +81,11 @@ export const answerReplyRouter = router({
       }
 
       try {
-        const answerReplyColl = collection(
-          db,
-          "users",
-          parentUid,
-          "questions",
-          questionId,
-          "answers",
-          answerId,
-          "replies"
-        );
-
         const replyResult = {
           reply,
           uid,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
+          createdAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
           displayName,
           username,
           answerId,
@@ -111,7 +93,11 @@ export const answerReplyRouter = router({
           questionUid: parentUid,
         };
 
-        const response = await addDoc(answerReplyColl, replyResult);
+        const response = await answerReplyColl(
+          parentUid,
+          questionId,
+          answerId
+        ).add(replyResult);
 
         return {
           id: response.id,
@@ -146,21 +132,9 @@ export const answerReplyRouter = router({
         });
       }
 
-      const answerReplyRef = doc(
-        db,
-        "users",
-        parentUid,
-        "questions",
-        questionId,
-        "answers",
-        answerId,
-        "replies",
-        replyId
-      );
-
-      await updateDoc(answerReplyRef, {
+      await answerReplyDoc(parentUid, questionId, answerId, replyId).update({
         reply,
-        updatedAt: serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
       });
     }),
 
@@ -184,18 +158,13 @@ export const answerReplyRouter = router({
         });
       }
 
-      const answerReplyRef = doc(
-        db,
-        "users",
+      const answerReplyRef = answerReplyDoc(
         parentUid,
-        "questions",
         questionId,
-        "answers",
         answerId,
-        "replies",
         replyId
       );
 
-      await deleteDoc(answerReplyRef);
+      await answerReplyRef.delete();
     }),
 });

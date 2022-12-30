@@ -1,21 +1,21 @@
 import { TRPCClientError } from "@trpc/client";
-import { publicProcedure } from "./../../trpc";
-import { db } from "@utils/firebase";
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  updateDoc,
-  deleteDoc,
-  getDocs,
-} from "firebase/firestore/lite";
+import { publicProcedure, router, protectedProcedure } from "@server/trpc/trpc";
 import { z } from "zod";
 
-import { router, protectedProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
-import type { ReplyData, ReplyResult } from "@types-local/defined-types";
+import type { ReplyResult } from "@types-local/defined-types";
 import { timestampToNumber } from "@utils/index";
+import { questionReplyColl, questionReplyDoc } from "@utils/firebase/admin";
+import { FieldValue } from "firebase-admin/firestore";
+
+type ReplyData = {
+  reply: string;
+  uid: string;
+  createdAt: FirebaseFirestore.Timestamp;
+  updatedAt: FirebaseFirestore.Timestamp;
+  displayName: string;
+  username: string;
+};
 
 export const questionReplyRouter = router({
   read: publicProcedure
@@ -23,15 +23,7 @@ export const questionReplyRouter = router({
     .query(async ({ input }) => {
       const { parentUid, questionId } = input;
 
-      const repliesColl = collection(
-        db,
-        "users",
-        parentUid,
-        "questions",
-        questionId,
-        "replies"
-      );
-      const repliesSnap = await getDocs(repliesColl);
+      const repliesSnap = await questionReplyColl(parentUid, questionId).get();
 
       const replies: ReplyResult[] = [];
 
@@ -72,27 +64,20 @@ export const questionReplyRouter = router({
       }
 
       try {
-        const questionReplyColl = collection(
-          db,
-          "users",
-          parentUid,
-          "questions",
-          questionId,
-          "replies"
-        );
-
         const replyResult = {
           reply,
           uid,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
+          createdAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
           displayName,
           username,
           questionId,
           questionUid: parentUid,
         };
 
-        const response = await addDoc(questionReplyColl, replyResult);
+        const response = await questionReplyColl(parentUid, questionId).add(
+          replyResult
+        );
 
         return {
           id: response.id,
@@ -126,19 +111,11 @@ export const questionReplyRouter = router({
         });
       }
 
-      const questionReplyRef = doc(
-        db,
-        "users",
-        parentUid,
-        "questions",
-        questionId,
-        "replies",
-        replyId
-      );
+      const questionReplyRef = questionReplyDoc(parentUid, questionId, replyId);
 
-      await updateDoc(questionReplyRef, {
+      await questionReplyRef.update({
         reply,
-        updatedAt: serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
       });
     }),
 
@@ -161,16 +138,8 @@ export const questionReplyRouter = router({
         });
       }
 
-      const questionReplyRef = doc(
-        db,
-        "users",
-        parentUid,
-        "questions",
-        questionId,
-        "replies",
-        replyId
-      );
+      const questionReplyRef = questionReplyDoc(parentUid, questionId, replyId);
 
-      await deleteDoc(questionReplyRef);
+      await questionReplyRef.delete();
     }),
 });

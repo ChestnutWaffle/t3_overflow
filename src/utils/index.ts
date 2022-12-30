@@ -1,4 +1,3 @@
-import type { Timestamp } from "firebase/firestore/lite";
 export function getDateString(unixDate: number | undefined) {
   if (!unixDate) return "";
   return new Date(unixDate / 1).toLocaleString("en-US", {
@@ -10,7 +9,7 @@ export function getDateString(unixDate: number | undefined) {
   });
 }
 
-export function timestampToNumber(timestamp: Timestamp) {
+export function timestampToNumber(timestamp: FirebaseFirestore.Timestamp) {
   const { seconds, nanoseconds } = timestamp;
   return seconds * 1000 + nanoseconds / 1000000;
 }

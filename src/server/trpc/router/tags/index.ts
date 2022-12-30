@@ -1,45 +1,31 @@
 import type { Question } from "@types-local/defined-types";
-import { db } from "@utils/firebase";
 import { timestampToNumber } from "@utils/index";
-import {
-  collectionGroup,
-  query,
-  orderBy,
-  limit,
-  getDocs,
-  startAfter,
-  where,
-  getDoc,
-  doc,
-  collection,
-} from "firebase/firestore/lite";
-import type { Timestamp } from "firebase/firestore/lite";
 import { z } from "zod";
 
-import { router, publicProcedure } from "../../trpc";
+import { router, publicProcedure } from "@server/trpc/trpc";
+import {
+  questionDoc,
+  questionsCollGrp,
+  tagsColl,
+  tagsDoc,
+} from "@utils/firebase/admin";
+import { getUserData } from "@utils/firebase/admin/docdata";
 
 export const tagsRouter = router({
   tagslist: publicProcedure
     .input(z.object({ cursor: z.string().nullish() }))
     .query(async ({ input }) => {
       const cursor = input.cursor as string | undefined;
-      const tagsCollGrp = collection(db, "tags");
 
-      const nthDoc = cursor && (await getDoc(doc(db, "tags", cursor)));
+      const nthDoc = cursor ? await tagsDoc(cursor).get() : undefined;
 
       const LIMIT = 32;
 
       try {
         const q = !nthDoc
-          ? query(tagsCollGrp, orderBy("name", "asc"), limit(LIMIT))
-          : query(
-              tagsCollGrp,
-              orderBy("name", "asc"),
-              startAfter(nthDoc),
-              limit(LIMIT)
-            );
-
-        const querySnap = await getDocs(q);
+          ? tagsColl.orderBy("name", "asc").limit(LIMIT)
+          : tagsColl.orderBy("name", "asc").startAfter(nthDoc).limit(LIMIT);
+        const querySnap = await q.get();
 
         const result: {
           name: string;
@@ -63,7 +49,7 @@ export const tagsRouter = router({
 
         return {
           result,
-          nextCursor: querySnap.docs.length < LIMIT ? undefined : lastDoc,
+          nextCursor: querySnap.docs.length < LIMIT ? undefined : lastDoc?.id,
         };
       } catch (error) {
         if (error instanceof Error) console.log(error);
@@ -79,31 +65,25 @@ export const tagsRouter = router({
     )
     .query(async ({ input }) => {
       const { cursor, tagname } = input;
-      const questionsCollGrp = collectionGroup(db, "questions");
 
-      const nthDoc =
-        cursor &&
-        (await getDoc(doc(db, "users", cursor.uid, "questions", cursor.id)));
+      const nthDoc = cursor
+        ? await questionDoc(cursor.uid, cursor.id).get()
+        : undefined;
 
       const LIMIT = 10;
 
       try {
         const q = !nthDoc
-          ? query(
-              questionsCollGrp,
-              where("tags", "array-contains", tagname),
-              orderBy("createdAt", "desc"),
-              limit(LIMIT)
-            )
-          : query(
-              questionsCollGrp,
-              where("tags", "array-contains", tagname),
-              orderBy("createdAt", "desc"),
-              startAfter(nthDoc),
-              limit(LIMIT)
-            );
-
-        const querySnap = await getDocs(q);
+          ? questionsCollGrp
+              .where("tags", "array-contains", tagname)
+              .orderBy("createdAt", "desc")
+              .limit(LIMIT)
+          : questionsCollGrp
+              .where("tags", "array-contains", tagname)
+              .orderBy("createdAt", "desc")
+              .startAfter(nthDoc)
+              .limit(LIMIT);
+        const querySnap = await q.get();
 
         const result: Question[] = [];
 
@@ -111,16 +91,7 @@ export const tagsRouter = router({
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const document = querySnap.docs[i]!;
           const data = document.data();
-          const userDoc = await getDoc(doc(db, "users", data.uid));
-          const userData = userDoc.data() as {
-            displayName: string;
-            createdAt: Timestamp;
-            updatedAt: Timestamp;
-            email: string;
-            emailVerified: boolean;
-            photoURL: string;
-            username: string;
-          };
+          const userData = await getUserData(data.uid);
 
           if (!userData) continue;
 
@@ -131,9 +102,9 @@ export const tagsRouter = router({
             title: data.title,
             uid: data.uid,
             user: {
-              displayName: userData?.displayName,
-              photoURL: userData?.photoURL,
-              username: userData?.username,
+              displayName: userData.displayName,
+              photoURL: userData.photoURL,
+              username: userData.username,
             },
           });
         }

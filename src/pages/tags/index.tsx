@@ -35,8 +35,8 @@ const TagListPage: NextPage = () => {
           <h1 className="mb-6 text-3xl font-black tracking-wide">Tags</h1>
           <div className="xs:grid-cols-1 mb-12 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {isLoading
-              ? [...Array(28)].map((num) => {
-                  return <TagSkeleton key={num} />;
+              ? [...Array(28)].map((num, idx) => {
+                  return <TagSkeleton key={idx} />;
                 })
               : data?.pages.map((page, index) => (
                   <Fragment key={index}>

@@ -1,27 +1,19 @@
 import { answerReplyRouter } from "./replies";
 import { TRPCError } from "@trpc/server";
-import { db } from "@utils/firebase";
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  updateDoc,
-  deleteDoc,
-  query,
-  orderBy,
-  limit,
-  startAfter,
-  getDocs,
-  getDoc,
-} from "firebase/firestore/lite";
-import type { Query, DocumentData, Timestamp } from "firebase/firestore/lite";
 import { z } from "zod";
 
 import { router, protectedProcedure, publicProcedure } from "@server/trpc/trpc";
 import { timestampToNumber } from "@utils/index";
 import type { AnswerResult, AnswerData } from "@types-local/defined-types";
 import { answerLikesRouter } from "./votes";
+import {
+  answerColl,
+  answerDoc,
+  answerDownvoteDoc,
+  answerUpvoteDoc,
+} from "@utils/firebase/admin";
+import { getUserData } from "@utils/firebase/admin/docdata";
+import { FieldValue } from "firebase-admin/firestore";
 
 export const answerRouter = router({
   read: publicProcedure
@@ -37,88 +29,50 @@ export const answerRouter = router({
       const cursor = input.cursor as string | undefined;
       const sessionUid = ctx.session?.uid;
 
-      const nthDoc =
-        cursor &&
-        (await getDoc(
-          doc(db, "users", uid, "questions", questionId, "answers", cursor)
-        ));
-
-      const answersColl = collection(
-        db,
-        "users",
-        uid,
-        "questions",
-        questionId,
-        "answers"
-      );
+      const nthDoc = cursor
+        ? await answerDoc(uid, questionId, cursor).get()
+        : undefined;
 
       const LIMIT = 1;
 
-      let q: Query<DocumentData>;
-
       try {
-        if (!nthDoc) {
-          q = query(answersColl, orderBy("likes", "desc"), limit(LIMIT));
-        } else {
-          q = query(
-            answersColl,
-            orderBy("likes", "desc"),
-            startAfter(nthDoc),
-            limit(LIMIT)
-          );
-        }
-        const querySnap = await getDocs(q);
+        const q = !nthDoc
+          ? answerColl(uid, questionId).orderBy("likes", "desc").limit(LIMIT)
+          : answerColl(uid, questionId)
+              .orderBy("likes", "desc")
+              .startAfter(nthDoc)
+              .limit(LIMIT);
+        const querySnap = await q.get();
         const result: AnswerResult[] = [];
 
         for (let i = 0; i < querySnap.docs.length; i++) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const document = querySnap.docs[i]!;
           const data = document.data() as AnswerData;
-          const userDoc = await getDoc(doc(db, "users", data.uid));
-          const userData = userDoc.data() as {
-            displayName: string;
-            createdAt: Timestamp;
-            updatedAt: Timestamp;
-            email: string;
-            emailVerified: boolean;
-            photoURL: string;
-            username: string;
-          };
+          const userData = await getUserData(data.uid);
+
+          if (!userData) continue;
 
           const upvote = sessionUid
             ? (
-                await getDoc(
-                  doc(
-                    db,
-                    "users",
-                    uid,
-                    "questions",
-                    questionId,
-                    "answers",
-                    document.id,
-                    "upvotes",
-                    sessionUid
-                  )
-                )
-              ).exists()
+                await answerUpvoteDoc(
+                  uid,
+                  questionId,
+                  document.id,
+                  sessionUid
+                ).get()
+              ).exists
             : false;
 
           const downvote = sessionUid
             ? (
-                await getDoc(
-                  doc(
-                    db,
-                    "users",
-                    uid,
-                    "questions",
-                    questionId,
-                    "answers",
-                    document.id,
-                    "downvotes",
-                    sessionUid
-                  )
-                )
-              ).exists()
+                await answerDownvoteDoc(
+                  uid,
+                  questionId,
+                  document.id,
+                  sessionUid
+                ).get()
+              ).exists
             : false;
 
           result.push({
@@ -129,9 +83,9 @@ export const answerRouter = router({
             createdAt: timestampToNumber(data.createdAt),
             updatedAt: timestampToNumber(data.updatedAt),
             user: {
-              displayName: userData?.displayName,
-              photoURL: userData?.photoURL,
-              username: userData?.username,
+              displayName: userData.displayName,
+              photoURL: userData.photoURL,
+              username: userData.username,
             },
           });
         }
@@ -169,21 +123,13 @@ export const answerRouter = router({
       }
 
       try {
-        const answerColl = collection(
-          db,
-          "users",
-          parentUid,
-          "questions",
-          questionId,
-          "answers"
-        );
-        await addDoc(answerColl, {
+        await answerColl(parentUid, questionId).add({
           detail,
           uid,
           questionId,
           likes: 0,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
+          createdAt: FieldValue.serverTimestamp(),
         });
 
         return {
@@ -222,18 +168,9 @@ export const answerRouter = router({
       }
 
       try {
-        const answerRef = doc(
-          db,
-          "users",
-          parentUid,
-          "questions",
-          questionId,
-          "answers",
-          answerId
-        );
-        await updateDoc(answerRef, {
+        await answerDoc(parentUid, questionId, answerId).update({
           detail,
-          updatedAt: serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
         });
 
         return {
@@ -267,17 +204,7 @@ export const answerRouter = router({
         });
       }
 
-      const answerRef = doc(
-        db,
-        "users",
-        parentUid,
-        "questions",
-        questionId,
-        "answers",
-        answerId
-      );
-
-      await deleteDoc(answerRef);
+      await answerDoc(parentUid, questionId, answerId).delete();
     }),
 
   reply: answerReplyRouter,
