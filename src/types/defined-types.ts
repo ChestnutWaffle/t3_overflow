@@ -1,4 +1,4 @@
-import type { Timestamp, FieldValue } from "firebase/firestore/lite";
+import { type Timestamp } from "firebase-admin/firestore";
 
 export type Question = {
   id: string;
@@ -13,92 +13,11 @@ export type Question = {
   };
 };
 
-export type User = {
-  id: string;
-  firstname: string;
-  lastname: string;
-  username: string;
-  photo_URL: string;
-};
-
-export type Reply = {
-  user: User;
-  id: number;
-  content: string;
-  createdAt: number;
-  updatedAt: number;
-};
-export type ReplyChanged = {
-  user: User;
-  id: number;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type MockData = {
-  user: User;
-  post: {
-    id: number;
-    title: string;
-    content: string;
-    createdAt: number;
-    updatedAt: number;
-    replies: Reply[];
-    answers: {
-      user: User;
-      id: number;
-      content: string;
-      createdAt: number;
-      updatedAt: number;
-      replies: Reply[];
-    }[];
-  };
-}[];
-
-export type MutatedQuestionData = [
-  {
-    user: User;
-    post: {
-      id: number;
-      title?: string;
-      content: string;
-      createdAt: string;
-      updatedAt: string;
-      replies: {
-        user: User;
-        id: number;
-        content: string;
-        createdAt: string;
-        updatedAt: string;
-      }[];
-    };
-  },
-  {
-    answers: {
-      user: User;
-      post: {
-        id: number;
-        content: string;
-        createdAt: string;
-        updatedAt: string;
-        replies: {
-          user: User;
-          id: number;
-          content: string;
-          createdAt: string;
-          updatedAt: string;
-        }[];
-      };
-    }[];
-  }
-];
-
 export type UserData = {
   displayName: string;
   email: string;
   emailVerified: boolean;
-  createdAt: FieldValue;
+  createdAt: Timestamp;
   photoURL: string;
   uid: string;
   username: string;
@@ -138,15 +57,6 @@ export type AnswerResult = {
     photoURL: string;
     displayName: string;
   };
-};
-
-export type ReplyData = {
-  reply: string;
-  uid: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-  displayName: string;
-  username: string;
 };
 
 export type ReplyResult = {

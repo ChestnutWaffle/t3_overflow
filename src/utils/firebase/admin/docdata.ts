@@ -3,7 +3,7 @@ import type { User } from "firebase/auth";
 import { FieldValue } from "firebase-admin/firestore";
 import { kebabCase } from "lodash";
 
-export type OtherParameters = {
+export type CUDParams = {
   userAuth: User;
   fullName?: string;
 };
@@ -26,10 +26,7 @@ export const getUserData = async (user: string) => {
   };
 };
 
-export const createUserDoc = async ({
-  userAuth,
-  fullName,
-}: OtherParameters) => {
+export const createUserDoc = async ({ userAuth, fullName }: CUDParams) => {
   if (!userAuth) return;
 
   const userRef = userDoc(userAuth.uid);

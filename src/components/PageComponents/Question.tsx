@@ -10,6 +10,7 @@ import { trpc } from "@utils/trpc";
 import { useUser } from "@context/UserContext";
 import { useState } from "react";
 import { kebabCase } from "lodash";
+import { useCustomToast } from "@hooks/useCustomToast";
 
 interface QuestionProps {
   questionData: {
@@ -117,6 +118,7 @@ type RepliesType = {
 
 const QuestionReplies = ({ parentUid, questionId }: RepliesType) => {
   const { userData } = useUser();
+  const { toast } = useCustomToast();
   const utils = trpc.useContext();
 
   const { data } = trpc.question.reply.read.useQuery({ parentUid, questionId });
@@ -142,6 +144,12 @@ const QuestionReplies = ({ parentUid, questionId }: RepliesType) => {
         }
       );
       setDisabled(false);
+    },
+    onError(error) {
+      toast({
+        variant: "error",
+        title: error.message,
+      });
     },
   });
 
@@ -234,6 +242,7 @@ const QuestionLikes = ({
 }: QuestionLikesProps) => {
   const utils = trpc.useContext();
   const { userData } = useUser();
+  const { toast } = useCustomToast();
 
   const { data } = trpc.question.vote.read.useQuery(
     { questionId, uid: parentUid },
@@ -261,6 +270,12 @@ const QuestionLikes = ({
         }
       );
     },
+    onError(error) {
+      toast({
+        variant: "error",
+        title: error.message,
+      });
+    },
   });
   const downvoteMutation = trpc.question.vote.downvote.useMutation({
     onSuccess(newData) {
@@ -276,6 +291,12 @@ const QuestionLikes = ({
           uid: parentUid,
         }
       );
+    },
+    onError(error) {
+      toast({
+        variant: "error",
+        title: error.message,
+      });
     },
   });
 

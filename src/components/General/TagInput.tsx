@@ -43,7 +43,7 @@ const TagInput = ({
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setInput(value);
+    setInput(value.toLowerCase());
   };
 
   const deleteTag = (index: number) => {

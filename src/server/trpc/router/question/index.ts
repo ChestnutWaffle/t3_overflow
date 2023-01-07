@@ -1,3 +1,4 @@
+import { TRPCClientError } from "@trpc/client";
 import type { QuestionData } from "@types-local/defined-types";
 import { publicProcedure, router, protectedProcedure } from "@server/trpc/trpc";
 import { questionReplyRouter } from "./replies";
@@ -55,7 +56,7 @@ export const questionRouter = router({
 
         return result;
       } catch (error) {
-        if (error instanceof Error) console.log(error);
+        throw new TRPCClientError("Question not found");
       }
     }),
 
@@ -95,7 +96,7 @@ export const questionRouter = router({
       }
 
       try {
-        await questionsColl(uid).add({
+        const docRef  =  await questionsColl(uid).add({
           title: question,
           slug: kebabCase(question),
           detail,
@@ -107,26 +108,27 @@ export const questionRouter = router({
         });
 
         tags.forEach(async (tag) => {
-          const tagRef = tagsDoc(tag);
+          const slugified = tag.toLowerCase().split(" ").join("-");
+          const tagRef = tagsDoc(slugified);
 
           if ((await tagRef.get()).exists) {
             await tagRef.update({
               count: FieldValue.increment(1),
             });
           } else {
-            await tagRef.set({ count: FieldValue.increment(1), name: tag });
+            await tagRef.set({
+              count: FieldValue.increment(1),
+              name: slugified,
+            });
           }
         });
 
         return {
-          code: 1,
-          message: "Question created successfully.",
+          questionId: docRef.id,
+          questionUid: uid
         };
       } catch (e) {
-        return {
-          code: -1,
-          message: "Failed to create Question.",
-        };
+        throw new TRPCClientError("Failed to create Question");
       }
     }),
 

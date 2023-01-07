@@ -18,7 +18,7 @@ const isAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session || !ctx.session?.uid) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "User not authorized",
+      message: "Please Login first!",
     });
   }
   return next();

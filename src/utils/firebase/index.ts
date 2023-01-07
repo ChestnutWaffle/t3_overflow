@@ -32,6 +32,8 @@ googleProvider.setCustomParameters({
   prompt: "select_account",
 });
 
+setPersistence(auth, browserLocalPersistence);
+
 // sign in methods
 export const signInGooglePopup = () => signInWithPopup(auth, googleProvider);
 
@@ -45,10 +47,9 @@ export const createAuthUserEmail = async (email: string, password: string) => {
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 
+// Email Verification method
 export const verifyEmail = async () => {
   if (auth.currentUser) {
     await sendEmailVerification(auth.currentUser);
   }
 };
-
-setPersistence(auth, browserLocalPersistence);

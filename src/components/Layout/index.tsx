@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import NavBar from "../navbar";
 import SideBar from "../PageComponents/Sidebar";
 import Drawer from "../PageComponents/Drawer";
@@ -10,7 +9,6 @@ type LayoutProps = {
 
 const Layout = ({ children }: LayoutProps) => {
   const [mobileSidebar, setMobileSidebar] = useState(false);
-
   return (
     <div className="flex flex-col pt-14 text-gray-700 dark:text-gray-300">
       <div className="fixed top-0 left-0 z-10 w-full">
@@ -21,11 +19,9 @@ const Layout = ({ children }: LayoutProps) => {
           <div className="hidden lg:block">
             <SideBar />
           </div>
-          <>
-            <Drawer isOpen={mobileSidebar} setIsOpen={setMobileSidebar}>
-              <SideBar className="lg:hidden" />
-            </Drawer>
-          </>
+          <Drawer isOpen={mobileSidebar} setIsOpen={setMobileSidebar}>
+            <SideBar className="lg:hidden" />
+          </Drawer>
         </div>
         <div className="-ml-1 h-full w-full border-l bg-gray-300 pl-1 pt-1 dark:bg-gray-900 lg:ml-0 lg:pl-[200px]">
           {children}

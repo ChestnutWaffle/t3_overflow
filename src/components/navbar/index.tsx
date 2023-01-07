@@ -15,23 +15,18 @@ type NavbarProps = {
 
 function Navbar({ setMobileSidebar }: NavbarProps) {
   const [dropDown, setDropdown] = useState(false);
-
   const { setTheme } = useContext(ThemeContext);
   const { userData } = useContext(UserCtx);
-
   const showDropdown = () => {
     setDropdown(true);
   };
-
   const hideDropdown = () => {
     setDropdown(false);
   };
-
   const changeTheme = () => {
     const currentTheme = localStorage.getItem("theme");
     if (currentTheme) setTheme(currentTheme === "dark" ? "light" : "dark");
   };
-
   return (
     <header className="relative shadow-md">
       <Loading />
@@ -100,7 +95,6 @@ function Navbar({ setMobileSidebar }: NavbarProps) {
                   />
                 )}
               </button>
-
               <div
                 onMouseEnter={showDropdown}
                 onMouseLeave={hideDropdown}

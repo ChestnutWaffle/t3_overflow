@@ -18,6 +18,13 @@ export const authRouter = router({
       return userData;
     }),
 
+  userDataUid: publicProcedure
+    .input(z.object({ uid: z.string() }))
+    .mutation(async ({ input }) => {
+      const userData = await getUserData(input.uid);
+      return userData;
+    }),
+
   emailSignUp: publicProcedure
     .input(z.object({ user: z.string(), displayName: z.string() }))
     .mutation(async ({ input }) => {
@@ -32,13 +39,6 @@ export const authRouter = router({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const userData = await getUserData(userDocRef!.id);
 
-      return userData;
-    }),
-
-  userDataUid: publicProcedure
-    .input(z.object({ uid: z.string() }))
-    .mutation(async ({ input }) => {
-      const userData = await getUserData(input.uid);
       return userData;
     }),
 

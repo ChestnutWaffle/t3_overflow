@@ -34,39 +34,37 @@ const Home: NextPage = () => {
   }, [inView, hasNextPage, fetchNext]);
 
   return (
-    <>
+    <main className="flex-1 p-4">
       <Head>
         <title>Overflow</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex-1 p-4">
-        <h1 className="py-4 text-3xl font-black tracking-wide text-gray-800 dark:text-gray-300">
-          Questions
-        </h1>
-        <div className="flex flex-col gap-4">
-          {isLoading
-            ? [...Array(5)].map((num, idx) => (
-                <PostSkeleton key={`${num}-${idx}`} />
-              ))
-            : data?.pages.map((page, index) => (
-                <Fragment key={index}>
-                  {page?.result.map((question) => {
-                    return <Post key={question.id} question={question} />;
-                  })}
-                </Fragment>
-              ))}
-          {hasNextPage ? (
-            <div className="-z-10 -mt-96 h-96 w-full" ref={ref}></div>
-          ) : (
-            !isLoading && (
-              <p className="text-lg font-bold dark:text-gray-400">
-                No more questions
-              </p>
-            )
-          )}
-        </div>
-      </main>
-    </>
+      <h1 className="py-4 text-3xl font-black tracking-wide text-gray-800 dark:text-gray-300">
+        Questions
+      </h1>
+      <div className="flex flex-col gap-4">
+        {isLoading
+          ? [...Array(5)].map((num, idx) => (
+              <PostSkeleton key={`${num}-${idx}`} />
+            ))
+          : data?.pages.map((page, index) => (
+              <Fragment key={index}>
+                {page?.result.map((question) => {
+                  return <Post key={question.id} question={question} />;
+                })}
+              </Fragment>
+            ))}
+        {hasNextPage ? (
+          <div className="-z-10 -mt-96 h-96 w-full" ref={ref}></div>
+        ) : (
+          !isLoading && (
+            <p className="text-lg font-bold dark:text-gray-400">
+              No more questions
+            </p>
+          )
+        )}
+      </div>
+    </main>
   );
 };
 

@@ -31,7 +31,6 @@ interface FirebaseError extends Error {
   customData?: Record<string, unknown> | undefined;
   readonly name: string;
 }
-
 const schema = z
   .object({
     email: z
@@ -45,15 +44,12 @@ const schema = z
       .max(32, "Password must not be more than 32 letters."),
   })
   .required();
-
 const SignIn = () => {
   const { updateCtx } = useContext(UserCtx);
   const { theme } = useContext(ThemeContext);
   const { toast } = useCustomToast();
-
   const [viewPassword, setViewPassword] = useState<boolean>(false);
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false);
-
   const {
     register,
     formState: { errors },
@@ -66,15 +62,12 @@ const SignIn = () => {
       password: "",
     },
   });
-
   const { setGlobalLoading } = useGlobalLoading();
-
   const userDataMutation = trpc.auth.userDataUid.useMutation({
     onSuccess: (data) => {
       updateCtx(data);
     },
   });
-
   const emailLogin = async (data: LoginForm) => {
     setSubmitBtnLoading(true);
     setGlobalLoading(true);
@@ -92,7 +85,6 @@ const SignIn = () => {
       setSubmitBtnLoading(false);
     }
   };
-
   return (
     <section className="w-full">
       <div className="mx-auto flex flex-col items-center justify-center px-6 lg:min-w-[500px] lg:py-0">

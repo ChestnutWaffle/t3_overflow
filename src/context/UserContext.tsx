@@ -64,6 +64,7 @@ export const UserCtxProvider = ({ children }: { children: JSX.Element }) => {
     const { uid }: User = JSON.parse(authUser);
 
     getUserDataMutation.mutate({ uid });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value = {

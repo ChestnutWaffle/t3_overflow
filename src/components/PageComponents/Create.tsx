@@ -12,6 +12,7 @@ import { useUser } from "@context/UserContext";
 import { trpc } from "@utils/trpc";
 import { useCustomToast } from "@hooks/useCustomToast";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const Editor = dynamic(
   () => import("../Markdown/Editor").then((mod) => mod.default),
@@ -55,6 +56,7 @@ const Create = () => {
   const user = useUser();
   const { toast } = useCustomToast();
   const [isDisabled, setIsDisabled] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -76,8 +78,9 @@ const Create = () => {
   const questionMutation = trpc.question.create.useMutation({
     onSuccess: (data) => {
       reset();
-      toast({ title: data.message, variant: "success" });
+      toast({ title: "Question successfully created!", variant: "success" });
       setIsDisabled(false);
+      router.push(`/questions/${data.questionUid}/${data.questionId}`);
     },
   });
 

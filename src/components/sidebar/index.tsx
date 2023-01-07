@@ -2,13 +2,9 @@ import { Sidebar as FlowSideBar } from "flowbite-react";
 import dynamic from "next/dynamic";
 import NavLink from "./NavLink";
 import { AiOutlineHome, AiOutlineTags } from "react-icons/ai";
-
 import { FiUsers } from "react-icons/fi";
-
 const EmailVerify = dynamic(() => import("./EmailVerify"));
-
 const AskLink = dynamic(() => import("./AskLink"));
-
 const CustomSidebar = () => {
   return (
     <>
@@ -40,9 +36,7 @@ const CustomSidebar = () => {
               />
             </li>
           </FlowSideBar.ItemGroup>
-
           <AskLink />
-
           <EmailVerify />
         </FlowSideBar.Items>
         <div className="mb-12"></div>

@@ -57,7 +57,7 @@ export const questionLikesRouter = router({
       if (uid !== sessionUid || !ctx.session?.email_verified) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "Unauthorized Action",
+          message: "Failed to Upvote",
         });
       }
 
@@ -133,7 +133,7 @@ export const questionLikesRouter = router({
       if (uid !== sessionUid || !ctx.session?.email_verified) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "Unauthorized Action",
+          message: "Failed to Downvote",
         });
       }
 
